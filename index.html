@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Particle Slider Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: auto;
+        }
+        
+        .slide-content.active {
+            opacity: 1;
+        }
+        
+        .slide-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .slide-content p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .slide-content button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            pointer-events: auto;
+        }
+        
+        .slide-content button:hover {
+            transform: scale(1.05);
+        }
+        
+        .navigation {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            pointer-events: auto;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+        }
+        
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <div id="ui">
+            <div class="loading" id="loading">Loading...</div>
+            
+            <div class="slide-content active" data-slide="0">
+                <h1>Particle Magic</h1>
+                <p>Experience the beauty of interactive particle systems with smooth transitions and stunning visual effects.</p>
+                <button onclick="nextSlide()">Explore More</button>
+            </div>
+            
+            <div class="slide-content" data-slide="1">
+                <h1>Dynamic Animations</h1>
+                <p>Watch as thousands of particles dance and morph, creating mesmerizing patterns that respond to your interactions.</p>
+                <button onclick="nextSlide()">Continue Journey</button>
+            </div>
+            
+            <div class="slide-content" data-slide="2">
+                <h1>Three.js Power</h1>
+                <p>Built with cutting-edge WebGL technology, delivering smooth 60fps animations and incredible visual fidelity.</p>
+                <button onclick="nextSlide()">Start Over</button>
+            </div>
+            
+            <div class="navigation">
+                <div class="nav-dot active" onclick="goToSlide(0)"></div>
+                <div class="nav-dot" onclick="goToSlide(1)"></div>
+                <div class="nav-dot" onclick="goToSlide(2)"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="toggleAutoplay()">Auto</button>
+                <button class="control-btn" onclick="toggleMouse()">Mouse</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class ParticleSlider {
+            constructor() {
+                this.container = document.getElementById('container');
+                this.canvas = document.getElementById('canvas');
+                this.loadingEl = document.getElementById('loading');
+                
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.particles = null;
+                this.particleGeometry = null;
+                this.particleMaterial = null;
+                
+                this.mouse = { x: 0, y: 0 };
+                this.targetMouse = { x: 0, y: 0 };
+                this.mouseEnabled = true;
+                
+                this.currentSlide = 0;
+                this.totalSlides = 3;
+                this.autoplay = true;
+                this.autoplayInterval = null;
+                
+                this.colors = [
+                    [1.0, 0.4, 0.2],    // Orange-red
+                    [0.2, 0.8, 1.0],    // Cyan
+                    [0.8, 0.2, 1.0]     // Purple
+                ];
+                
+                this.particleCount = 15000;
+                this.particlePositions = [];
+                this.particleColors = [];
+                this.particleVelocities = [];
+                this.particleTargets = [];
+                
+                this.time = 0;
+                this.transitionProgress = 0;
+                this.isTransitioning = false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupScene();
+                this.createParticles();
+                this.setupEventListeners();
+                this.animate();
+                this.startAutoplay();
+                
+                // Hide loading
+                setTimeout(() => {
+                    this.loadingEl.style.display = 'none';
+                }, 1000);
+            }
+            
+            setupScene() {
+                // Scene
+                this.scene = new THREE.Scene();
+                
+                // Camera
+                this.camera = new THREE.PerspectiveCamera(
+                    75,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                this.camera.position.z = 400;
+                
+                // Renderer
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: this.canvas,
+                    antialias: true,
+                    alpha: true
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(window.devicePixelRatio);
+                this.renderer.setClearColor(0x000000, 0);
+            }
+            
+            createParticles() {
+                this.particleGeometry = new THREE.BufferGeometry();
+                
+                // Initialize arrays
+                this.particlePositions = new Float32Array(this.particleCount * 3);
+                this.particleColors = new Float32Array(this.particleCount * 3);
+                this.particleVelocities = [];
+                this.particleTargets = [];
+                
+                // Create particles in different formations
+                for (let i = 0; i < this.particleCount; i++) {
+                    const i3 = i * 3;
+                    
+                    // Initialize positions
+                    this.particlePositions[i3] = (Math.random() - 0.5) * 800;
+                    this.particlePositions[i3 + 1] = (Math.random() - 0.5) * 600;
+                    this.particlePositions[i3 + 2] = (Math.random() - 0.5) * 400;
+                    
+                    // Initialize colors
+                    const color = this.colors[this.currentSlide];
+                    this.particleColors[i3] = color[0];
+                    this.particleColors[i3 + 1] = color[1];
+                    this.particleColors[i3 + 2] = color[2];
+                    
+                    // Initialize velocities and targets
+                    this.particleVelocities.push({ x: 0, y: 0, z: 0 });
+                    this.particleTargets.push({ x: 0, y: 0, z: 0 });
+                }
+                
+                this.particleGeometry.setAttribute('position', new THREE.BufferAttribute(this.particlePositions, 3));
+                this.particleGeometry.setAttribute('color', new THREE.BufferAttribute(this.particleColors, 3));
+                
+                // Material
+                this.particleMaterial = new THREE.PointsMaterial({
+                    size: 2,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                // Create points
+                this.particles = new THREE.Points(this.particleGeometry, this.particleMaterial);
+                this.scene.add(this.particles);
+                
+                this.updateParticleTargets();
+            }
+            
+            updateParticleTargets() {
+                const formations = [
+                    this.createSpiralFormation,
+                    this.createWaveFormation,
+                    this.createSphereFormation
+                ];
+                
+                const formation = formations[this.currentSlide];
+                const targets = formation.call(this);
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    if (targets[i]) {
+                        this.particleTargets[i] = targets[i];
+                    }
+                }
+            }
+            
+            createSpiralFormation() {
+                const targets = [];
+                const radius = 200;
+                const height = 300;
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    const t = (i / this.particleCount) * Math.PI * 8;
+                    const r = radius * (1 - i / this.particleCount);
+                    
+                    targets.push({
+                        x: Math.cos(t) * r,
+                        y: (i / this.particleCount) * height - height / 2,
+                        z: Math.sin(t) * r
+                    });
+                }
+                
+                return targets;
+            }
+            
+            createWaveFormation() {
+                const targets = [];
+                const width = 400;
+                const height = 200;
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    const x = (i / this.particleCount) * width - width / 2;
+                    const y = Math.sin(x * 0.02) * height;
+                    const z = Math.cos(x * 0.01) * 100;
+                    
+                    targets.push({ x, y, z });
+                }
+                
+                return targets;
+            }
+            
+            createSphereFormation() {
+                const targets = [];
+                const radius = 250;
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    const phi = Math.acos(-1 + (2 * i) / this.particleCount);
+                    const theta = Math.sqrt(this.particleCount * Math.PI) * phi;
+                    
+                    targets.push({
+                        x: radius * Math.cos(theta) * Math.sin(phi),
+                        y: radius * Math.sin(theta) * Math.sin(phi),
+                        z: radius * Math.cos(phi)
+                    });
+                }
+                
+                return targets;
+            }
+            
+            setupEventListeners() {
+                window.addEventListener('resize', () => this.onWindowResize());
+                
+                this.container.addEventListener('mousemove', (event) => {
+                    if (!this.mouseEnabled) return;
+                    
+                    this.targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    this.targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                });
+                
+                this.container.addEventListener('click', () => {
+                    this.nextSlide();
+                });
+            }
+            
+            onWindowResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.016;
+                
+                // Smooth mouse movement
+                this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.02;
+                this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.02;
+                
+                // Update particles
+                this.updateParticles();
+                
+                // Rotate particles slightly
+                if (this.particles) {
+                    this.particles.rotation.y += 0.001;
+                    this.particles.rotation.x = this.mouse.y * 0.1;
+                    this.particles.rotation.z = this.mouse.x * 0.05;
+                }
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+            
+            updateParticles() {
+                const positions = this.particleGeometry.attributes.position.array;
+                const colors = this.particleGeometry.attributes.color.array;
+                const targetColor = this.colors[this.currentSlide];
+                
+                for (let i = 0; i < this.particleCount; i++) {
+                    const i3 = i * 3;
+                    
+                    // Update positions
+                    const target = this.particleTargets[i];
+                    const velocity = this.particleVelocities[i];
+                    
+                    // Add some noise and mouse influence
+                    const noiseX = Math.sin(this.time + i * 0.01) * 2;
+                    const noiseY = Math.cos(this.time + i * 0.01) * 2;
+                    const mouseInfluence = 20;
+                    
+                    velocity.x += (target.x + noiseX + this.mouse.x * mouseInfluence - positions[i3]) * 0.02;
+                    velocity.y += (target.y + noiseY + this.mouse.y * mouseInfluence - positions[i3 + 1]) * 0.02;
+                    velocity.z += (target.z - positions[i3 + 2]) * 0.02;
+                    
+                    // Apply velocity damping
+                    velocity.x *= 0.95;
+                    velocity.y *= 0.95;
+                    velocity.z *= 0.95;
+                    
+                    // Update positions
+                    positions[i3] += velocity.x;
+                    positions[i3 + 1] += velocity.y;
+                    positions[i3 + 2] += velocity.z;
+                    
+                    // Update colors
+                    colors[i3] += (targetColor[0] - colors[i3]) * 0.02;
+                    colors[i3 + 1] += (targetColor[1] - colors[i3 + 1]) * 0.02;
+                    colors[i3 + 2] += (targetColor[2] - colors[i3 + 2]) * 0.02;
+                }
+                
+                this.particleGeometry.attributes.position.needsUpdate = true;
+                this.particleGeometry.attributes.color.needsUpdate = true;
+            }
+            
+            nextSlide() {
+                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                this.updateSlide();
+            }
+            
+            goToSlide(index) {
+                this.currentSlide = index;
+                this.updateSlide();
+            }
+            
+            updateSlide() {
+                // Update UI
+                document.querySelectorAll('.slide-content').forEach((el, index) => {
+                    el.classList.toggle('active', index === this.currentSlide);
+                });
+                
+                document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentSlide);
+                });
+                
+                // Update particle targets
+                this.updateParticleTargets();
+            }
+            
+            toggleAutoplay() {
+                this.autoplay = !this.autoplay;
+                if (this.autoplay) {
+                    this.startAutoplay();
+                } else {
+                    this.stopAutoplay();
+                }
+            }
+            
+            startAutoplay() {
+                if (!this.autoplay) return;
+                
+                this.autoplayInterval = setInterval(() => {
+                    this.nextSlide();
+                }, 5000);
+            }
+            
+            stopAutoplay() {
+                if (this.autoplayInterval) {
+                    clearInterval(this.autoplayInterval);
+                    this.autoplayInterval = null;
+                }
+            }
+            
+            toggleMouse() {
+                this.mouseEnabled = !this.mouseEnabled;
+                if (!this.mouseEnabled) {
+                    this.targetMouse = { x: 0, y: 0 };
+                }
+            }
+        }
+        
+        // Global functions for UI
+        let particleSlider;
+        
+        function nextSlide() {
+            particleSlider.nextSlide();
+        }
+        
+        function goToSlide(index) {
+            particleSlider.goToSlide(index);
+        }
+        
+        function toggleAutoplay() {
+            particleSlider.toggleAutoplay();
+        }
+        
+        function toggleMouse() {
+            particleSlider.toggleMouse();
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            particleSlider = new ParticleSlider();
+        });
+    </script>
+</body>
+</html>
