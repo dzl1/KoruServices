@@ -15,8 +15,8 @@
         
         body {
             font-family: 'Montserrat', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
+            background: #ffffff;
+            color: #333333;
             overflow: hidden;
         }
         
@@ -62,32 +62,87 @@
             font-size: 3rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            color: #333333;
         }
         
         .slide-content p {
             font-size: 1.2rem;
-            font-weight: 300;
+            font-weight: 600;
             margin-bottom: 2rem;
             max-width: 600px;
             line-height: 1.6;
+            color: #555555;
+            padding: 0 20px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .slide-content h1 {
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .slide-content p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                max-width: 90%;
+                padding: 0 15px;
+            }
+            
+            .slide-content button {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .slide-content h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.6rem;
+            }
+            
+            .slide-content p {
+                font-size: 0.9rem;
+                margin-bottom: 1.2rem;
+                max-width: 95%;
+                padding: 0 10px;
+                line-height: 1.5;
+            }
+            
+            .slide-content button {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+            }
+            
+            .navigation {
+                bottom: 20px;
+            }
+            
+            .nav-dot {
+                width: 10px;
+                height: 10px;
+            }
         }
         
         .slide-content button {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: #b8956a;
             border: none;
             color: white;
-            padding: 12px 30px;
+            padding: 15px 35px;
             font-size: 1rem;
             font-weight: 600;
-            border-radius: 25px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             pointer-events: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         .slide-content button:hover {
-            transform: scale(1.05);
+            background: #a3835a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
         
         .navigation {
@@ -104,13 +159,13 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .nav-dot.active {
-            background: #fff;
+            background: #333333;
             transform: scale(1.2);
         }
         
@@ -118,7 +173,7 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            display: flex;
+            display: none;
             gap: 10px;
             pointer-events: auto;
         }
@@ -145,6 +200,7 @@
             transform: translate(-50%, -50%);
             font-size: 1.5rem;
             z-index: 10;
+            color: #333333;
         }
     </style>
 </head>
@@ -155,20 +211,26 @@
             <div class="loading" id="loading">Loading...</div>
             
             <div class="slide-content active" data-slide="0">
-                <h1>Particle Magic</h1>
-                <p>Experience the beauty of interactive particle systems with smooth transitions and stunning visual effects.</p>
+                <h1>Amazing Talent</h1>
+                <p>Experience the beauty of interactive systems that move your organisation from static to dynamic using pure imagination.</p>
                 <button onclick="nextSlide()">Explore More</button>
             </div>
             
             <div class="slide-content" data-slide="1">
-                <h1>Dynamic Animations</h1>
-                <p>Watch as thousands of particles dance and morph, creating mesmerizing patterns that respond to your interactions.</p>
+                <h1>Dynamic Team Environments</h1>
+                <p>Helping morph and respond to your interactions.</p>
                 <button onclick="nextSlide()">Continue Journey</button>
             </div>
             
             <div class="slide-content" data-slide="2">
-                <h1>Three.js Power</h1>
-                <p>Built with cutting-edge WebGL technology, delivering smooth 60fps animations and incredible visual fidelity.</p>
+                <h1>Corporate Solutions</h1>
+                <p>Using cutting-edge technology, delivering smooth visual frameworks to help your team grow.</p>
+                <button onclick="nextSlide()">Continue Journey</button>
+            </div>
+            
+            <div class="slide-content" data-slide="3">
+                <h1>Innovation</h1>
+                <p>Harmonizing technology with creativity - we help your voice reach new frequencies of success.</p>
                 <button onclick="nextSlide()">Start Over</button>
             </div>
             
@@ -176,6 +238,7 @@
                 <div class="nav-dot active" onclick="goToSlide(0)"></div>
                 <div class="nav-dot" onclick="goToSlide(1)"></div>
                 <div class="nav-dot" onclick="goToSlide(2)"></div>
+                <div class="nav-dot" onclick="goToSlide(3)"></div>
             </div>
             
             <div class="controls">
@@ -205,14 +268,15 @@
                 this.mouseEnabled = true;
                 
                 this.currentSlide = 0;
-                this.totalSlides = 3;
+                this.totalSlides = 4;
                 this.autoplay = true;
                 this.autoplayInterval = null;
                 
                 this.colors = [
-                    [1.0, 0.4, 0.2],    // Orange-red
-                    [0.2, 0.8, 1.0],    // Cyan
-                    [0.8, 0.2, 1.0]     // Purple
+                    [0.2, 0.4, 0.8],    // Deep blue
+                    [0.8, 0.2, 0.4],    // Deep red
+                    [0.4, 0.6, 0.2],    // Deep green
+                    [0.8, 0.7, 0.5]     // Light brown for cube design
                 ];
                 
                 this.particleCount = 15000;
@@ -262,7 +326,7 @@
                 });
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 this.renderer.setPixelRatio(window.devicePixelRatio);
-                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.setClearColor(0xffffff, 1);
             }
             
             createParticles() {
@@ -299,11 +363,11 @@
                 
                 // Material
                 this.particleMaterial = new THREE.PointsMaterial({
-                    size: 2,
+                    size: 3,
                     vertexColors: true,
                     transparent: true,
-                    opacity: 0.8,
-                    blending: THREE.AdditiveBlending
+                    opacity: 0.7,
+                    blending: THREE.NormalBlending
                 });
                 
                 // Create points
@@ -317,7 +381,8 @@
                 const formations = [
                     this.createSpiralFormation,
                     this.createWaveFormation,
-                    this.createSphereFormation
+                    this.createSphereFormation,
+                    this.createMaoriDesignFormation
                 ];
                 
                 const formation = formations[this.currentSlide];
@@ -332,7 +397,7 @@
             
             createSpiralFormation() {
                 const targets = [];
-                const radius = 200;
+                const radius = 150;
                 const height = 300;
                 
                 for (let i = 0; i < this.particleCount; i++) {
@@ -351,15 +416,32 @@
             
             createWaveFormation() {
                 const targets = [];
-                const width = 400;
+                const width = 900;
                 const height = 200;
+                const depth = 300;
                 
                 for (let i = 0; i < this.particleCount; i++) {
-                    const x = (i / this.particleCount) * width - width / 2;
-                    const y = Math.sin(x * 0.02) * height;
-                    const z = Math.cos(x * 0.01) * 100;
+                    // Create wave-like distribution but with scattered particles
+                    const baseX = (i / this.particleCount) * width - width / 2;
+                    const baseY = Math.sin(baseX * 0.02) * height;
+                    const baseZ = Math.cos(baseX * 0.01) * 100;
                     
-                    targets.push({ x, y, z });
+                    // Add randomness to scatter particles around the wave path
+                    const scatterRadius = 30;
+                    const x = baseX + (Math.random() - 0.5) * scatterRadius;
+                    const y = baseY + (Math.random() - 0.5) * scatterRadius;
+                    const z = baseZ + (Math.random() - 0.5) * depth;
+                    
+                    // Add some noise for organic movement
+                    const noiseX = Math.sin(i * 0.01) * 10;
+                    const noiseY = Math.cos(i * 0.015) * 10;
+                    const noiseZ = Math.sin(i * 0.02) * 15;
+                    
+                    targets.push({ 
+                        x: x + noiseX, 
+                        y: y + noiseY, 
+                        z: z + noiseZ 
+                    });
                 }
                 
                 return targets;
@@ -377,6 +459,32 @@
                         x: radius * Math.cos(theta) * Math.sin(phi),
                         y: radius * Math.sin(theta) * Math.sin(phi),
                         z: radius * Math.cos(phi)
+                    });
+                }
+                
+                return targets;
+            }
+            
+            createMaoriDesignFormation() {
+                const targets = [];
+                const size = 200; // Cube size
+                
+                // Create a solid cube by filling the entire volume with particles
+                for (let i = 0; i < this.particleCount; i++) {
+                    // Generate random positions within the cube volume
+                    const x = (Math.random() - 0.5) * size;
+                    const y = (Math.random() - 0.5) * size;
+                    const z = (Math.random() - 0.5) * size;
+                    
+                    // Add subtle noise for organic feel
+                    const noiseX = Math.sin(i * 0.01) * 5;
+                    const noiseY = Math.cos(i * 0.01) * 5;
+                    const noiseZ = Math.sin(i * 0.02) * 5;
+                    
+                    targets.push({
+                        x: x + noiseX,
+                        y: y + noiseY,
+                        z: z + noiseZ
                     });
                 }
                 
@@ -505,7 +613,7 @@
                 
                 this.autoplayInterval = setInterval(() => {
                     this.nextSlide();
-                }, 5000);
+                }, 15000);
             }
             
             stopAutoplay() {
