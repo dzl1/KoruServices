@@ -212,7 +212,7 @@
             
             <div class="slide-content active" data-slide="0">
                 <h1>Amazing Talent</h1>
-                <p>Experience the beauty of interactive systems that move your organisation from static to dynamic using pure imagination.</p>
+                <p>Experience the beauty of interactive systems that move your organisation from static to dynamic through streamlined processes.</p>
                 <button onclick="nextSlide()">Explore More</button>
             </div>
             
@@ -418,32 +418,32 @@
                 const targets = [];
                 const width = 900;
                 const height = 200;
-                const depth = 300;
-                
+                const depth = 600; // Expanded depth for more volumetric effect
+                const scatterRadius = 120; // Expanded scatter radius for more spread
+
                 for (let i = 0; i < this.particleCount; i++) {
                     // Create wave-like distribution but with scattered particles
                     const baseX = (i / this.particleCount) * width - width / 2;
                     const baseY = Math.sin(baseX * 0.02) * height;
                     const baseZ = Math.cos(baseX * 0.01) * 100;
-                    
-                    // Add randomness to scatter particles around the wave path
-                    const scatterRadius = 30;
+
+                    // Scatter particles widely around the wave path
                     const x = baseX + (Math.random() - 0.5) * scatterRadius;
                     const y = baseY + (Math.random() - 0.5) * scatterRadius;
                     const z = baseZ + (Math.random() - 0.5) * depth;
-                    
+
                     // Add some noise for organic movement
-                    const noiseX = Math.sin(i * 0.01) * 10;
-                    const noiseY = Math.cos(i * 0.015) * 10;
-                    const noiseZ = Math.sin(i * 0.02) * 15;
-                    
+                    const noiseX = Math.sin(i * 0.01) * 20;
+                    const noiseY = Math.cos(i * 0.015) * 20;
+                    const noiseZ = Math.sin(i * 0.02) * 30;
+
                     targets.push({ 
                         x: x + noiseX, 
                         y: y + noiseY, 
                         z: z + noiseZ 
                     });
                 }
-                
+
                 return targets;
             }
             
