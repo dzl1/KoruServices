@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book time with Koru Services to talk through where support could help.">
+  <title>Approach | Koru Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text: #08111e;
+      --muted: rgba(8, 17, 30, 0.72);
+      --accent: #f4b35e;
+      --accent-strong: #ffcb86;
+      --accent-blue: #71c8ff;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(113, 200, 255, 0.22), transparent 30%),
+        radial-gradient(circle at 86% 12%, rgba(244, 179, 94, 0.16), transparent 26%),
+        linear-gradient(180deg, #f8fbff 0%, #eef6ff 40%, #fef8ee 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(248, 251, 255, 0.9), rgba(248, 251, 255, 0.72));
+      border-bottom: 1px solid rgba(10, 29, 51, 0.08);
+    }
+
+    .site-header__inner {
+      min-height: 84px;
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .brand__mark {
+      width: 180px;
+      height: auto;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav a {
+      position: relative;
+      padding: 10px 14px;
+      color: rgba(10, 29, 51, 0.78);
+      overflow: hidden;
+      isolation: isolate;
+      text-shadow: 0 2px 8px rgba(8, 17, 30, 0.16);
+      transition: color 180ms ease, transform 180ms ease;
+    }
+
+    .nav a::before {
+      content: "";
+      position: absolute;
+      inset: 7px 4px;
+      z-index: -1;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 240ms ease;
+    }
+
+    .nav a:hover,
+    .nav a[aria-current="page"] {
+      color: #08111e;
+      transform: translateY(-1px);
+    }
+
+    .nav a:hover::before,
+    .nav a[aria-current="page"]::before {
+      transform: scaleX(1);
+    }
+
+    .approach {
+      padding: 56px 0 76px;
+    }
+
+    .approach__grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(320px, 1.12fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .approach__intro {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      position: sticky;
+      top: 128px;
+    }
+
+    .section__kicker {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: rgba(8, 17, 30, 0.55);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .approach__lede {
+      margin: 0;
+      max-width: 52ch;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.8;
+    }
+
+    .booking-options {
+      display: grid;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .booking-option {
+      padding: 18px 20px;
+      border: 1px solid rgba(8, 17, 30, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+    }
+
+    .booking-option strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.02rem;
+    }
+
+    .booking-option span {
+      color: var(--muted);
+      line-height: 1.62;
+    }
+
+    .booking-panel {
+      padding: 28px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(8, 17, 30, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .booking-panel h2 {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2.45rem);
+      letter-spacing: -0.04em;
+    }
+
+    .booking-panel p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .booking-form {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .booking-form__row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field,
+    .choice-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label,
+    .choice-group legend {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: rgba(8, 17, 30, 0.82);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid rgba(8, 17, 30, 0.12);
+      padding: 14px 16px;
+      color: #08111e;
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .field textarea {
+      min-height: 132px;
+      resize: vertical;
+    }
+
+    .choice-group {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .choice {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 56px;
+      padding: 10px;
+      border: 1px solid rgba(8, 17, 30, 0.12);
+      background: rgba(255, 255, 255, 0.62);
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      font-weight: 800;
+    }
+
+    .choice::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(135deg, rgba(255, 203, 134, 0.72), rgba(244, 179, 94, 0.58));
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 220ms ease;
+    }
+
+    .choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .choice:hover::before,
+    .choice:has(input:checked)::before {
+      transform: scaleX(1);
+    }
+
+    .button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 44px;
+      padding: 0 4px;
+      border: 0;
+      color: #08111e;
+      background: transparent;
+      cursor: pointer;
+      overflow: hidden;
+      isolation: isolate;
+      white-space: nowrap;
+      font-weight: 800;
+      transition: color 180ms ease, transform 180ms ease;
+    }
+
+    .button::before {
+      content: "";
+      position: absolute;
+      inset: 6px -10px;
+      z-index: -1;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 240ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button:hover::before {
+      transform: scaleX(1);
+    }
+
+    .site-footer {
+      padding: 28px 0 36px;
+      color: rgba(10, 29, 51, 0.72);
+      background: #fff;
+      font-size: 0.92rem;
+    }
+
+    .site-footer__inner {
+      border-top: 1px solid rgba(10, 29, 51, 0.08);
+      padding-top: 26px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .site-footer__main {
+      display: flex;
+      justify-content: space-between;
+      gap: 28px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .site-footer__logo {
+      width: 96px;
+      height: auto;
+    }
+
+    .site-footer__details {
+      display: grid;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .site-footer__details p,
+    .site-footer__meta {
+      margin: 0;
+    }
+
+    .site-footer__details p {
+      line-height: 1.6;
+    }
+
+    .site-footer__details strong {
+      display: block;
+      color: #08111e;
+      font-weight: 800;
+    }
+
+    .site-footer__details a {
+      color: #08111e;
+      font-weight: 700;
+    }
+
+    .site-footer__links {
+      display: flex;
+      justify-content: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer__links a {
+      color: rgba(10, 29, 51, 0.76);
+      font-weight: 700;
+    }
+
+    .site-footer__links a:hover {
+      color: #08111e;
+    }
+
+    .site-footer__meta {
+      color: rgba(10, 29, 51, 0.54);
+    }
+
+    @media (max-width: 880px) {
+      .approach__grid,
+      .booking-form__row,
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .approach__intro {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-header__inner {
+        min-height: 76px;
+        align-items: start;
+        padding: 16px 0;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .approach {
+        padding: 38px 0 56px;
+      }
+
+      .booking-panel {
+        padding: 22px;
+      }
+
+      .site-footer__main {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .site-footer__details {
+        text-align: left;
+      }
+
+      .site-footer__links {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="index.html#home" aria-label="Koru Services home">
+          <img class="brand__mark" src="https://static.wixstatic.com/media/454f39_af49ab30f257435287b433b669c81b61~mv2.png/v1/fill/w_183,h_90,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/454f39_af49ab30f257435287b433b669c81b61~mv2.png" alt="Koru Services logo">
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="index.html#home">Home</a>
+          <a href="index.html#services">Services</a>
+          <a href="approach.html" aria-current="page">Approach</a>
+          <a href="index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="approach" id="book">
+        <div class="container approach__grid">
+          <div class="approach__intro">
+            <p class="section__kicker">Our Approach</p>
+            <h1>Book a kōrero.</h1>
+            <p class="approach__lede">
+              Schedule time to grab a coffee, hot chocolate, or herbal tea and talk through where Koru Services can help.
+            </p>
+
+            <div class="booking-options" aria-label="Meeting options">
+              <div class="booking-option">
+                <strong>Coffee</strong>
+                <span>A focused chat for ideas, direction, and next steps.</span>
+              </div>
+              <div class="booking-option">
+                <strong>Hot chocolate</strong>
+                <span>A warm, easy conversation for early-stage thoughts.</span>
+              </div>
+              <div class="booking-option">
+                <strong>Herbal tea</strong>
+                <span>A calmer pace for careful planning and support needs.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-panel">
+            <h2>Confirm your details.</h2>
+            <p>Share a preferred time and a little context, and we will follow up to confirm the booking.</p>
+
+            <form class="booking-form" action="mailto:office@koruservices.co.nz" method="post" enctype="text/plain">
+              <div class="booking-form__row">
+                <div class="field">
+                  <label for="first-name">First name *</label>
+                  <input id="first-name" name="first-name" type="text" autocomplete="given-name" required>
+                </div>
+                <div class="field">
+                  <label for="last-name">Last name</label>
+                  <input id="last-name" name="last-name" type="text" autocomplete="family-name">
+                </div>
+              </div>
+
+              <div class="booking-form__row">
+                <div class="field">
+                  <label for="email">Email *</label>
+                  <input id="email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                  <label for="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel">
+                </div>
+              </div>
+
+              <fieldset class="choice-group">
+                <legend>Drink preference</legend>
+                <div class="choice-grid">
+                  <label class="choice">
+                    <input type="radio" name="drink" value="Coffee" checked>
+                    Coffee
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="drink" value="Hot chocolate">
+                    Hot chocolate
+                  </label>
+                  <label class="choice">
+                    <input type="radio" name="drink" value="Herbal tea">
+                    Herbal tea
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="booking-form__row">
+                <div class="field">
+                  <label for="preferred-date">Preferred date *</label>
+                  <input id="preferred-date" name="preferred-date" type="date" required>
+                </div>
+                <div class="field">
+                  <label for="preferred-time">Preferred time *</label>
+                  <input id="preferred-time" name="preferred-time" type="time" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="meeting-place">Meeting place</label>
+                <select id="meeting-place" name="meeting-place">
+                  <option value="To be confirmed">To be confirmed</option>
+                  <option value="Online">Online</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="details">What would you like to talk about?</label>
+                <textarea id="details" name="details"></textarea>
+              </div>
+
+              <button class="button" type="submit">Request a booking</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="site-footer__main">
+          <img class="site-footer__logo" src="https://static.wixstatic.com/media/454f39_a8cbb543f687411c94b241df4123b155~mv2.png/v1/fill/w_146,h_217,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Gold%20with%20TEXT.png" alt="Koru Services logo">
+
+          <div class="site-footer__details">
+            <p>
+              <strong>Email</strong>
+              <a href="mailto:office@koruservices.co.nz">office@koruservices.co.nz</a>
+            </p>
+            <nav class="site-footer__links" aria-label="Footer">
+              <a href="child-protection-privacy.html">Child Protection &amp; Privacy</a>
+              <a href="gallery.html">Our Gallery</a>
+            </nav>
+          </div>
+        </div>
+        <p class="site-footer__meta">© 2026 Koru Services</p>
+      </div>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      const bookingForm = document.querySelector('.booking-form');
+      const preferredDate = document.querySelector('#preferred-date');
+
+      if (!bookingForm || !preferredDate) {
+        return;
+      }
+
+      const today = new Date();
+      today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+      const todayValue = today.toISOString().slice(0, 10);
+
+      preferredDate.min = todayValue;
+
+      preferredDate.addEventListener('input', function () {
+        preferredDate.setCustomValidity('');
+      });
+
+      bookingForm.addEventListener('submit', function (event) {
+        if (preferredDate.value && preferredDate.value < todayValue) {
+          event.preventDefault();
+          preferredDate.setCustomValidity('Please choose today or a future date.');
+          preferredDate.reportValidity();
+          return;
+        }
+
+        preferredDate.setCustomValidity('');
+      });
+    })();
+  </script>
+</body>
+</html>

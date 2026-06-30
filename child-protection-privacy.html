@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Child Protection and Privacy information for Koru Services.">
+  <title>Child Protection &amp; Privacy | Koru Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text: #08111e;
+      --muted: rgba(8, 17, 30, 0.72);
+      --accent: #f4b35e;
+      --accent-strong: #ffcb86;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 52%, #fff 100%);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(248, 251, 255, 0.94), rgba(248, 251, 255, 0.78));
+      border-bottom: 1px solid rgba(10, 29, 51, 0.08);
+    }
+
+    .site-header__inner,
+    .site-footer__main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .site-header__inner {
+      min-height: 84px;
+      padding: 12px 0;
+    }
+
+    .brand__mark {
+      width: 180px;
+      height: auto;
+    }
+
+    .nav,
+    .site-footer__links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav a,
+    .site-footer__links a {
+      color: rgba(10, 29, 51, 0.78);
+      font-weight: 700;
+    }
+
+    .nav a:hover,
+    .site-footer__links a:hover {
+      color: #08111e;
+    }
+
+    main {
+      padding: 72px 0 96px;
+    }
+
+    .page-copy {
+      max-width: 760px;
+    }
+
+    .page-copy p:first-child {
+      margin: 0 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      color: rgba(8, 17, 30, 0.55);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 5vw, 4.8rem);
+      line-height: 1;
+    }
+
+    .lede {
+      margin: 22px 0 0;
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.8;
+    }
+
+    .site-footer {
+      padding: 34px 0;
+      background: #fff;
+      font-size: 0.92rem;
+    }
+
+    .site-footer__inner {
+      border-top: 1px solid rgba(10, 29, 51, 0.08);
+      padding-top: 26px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .site-footer__logo {
+      width: 96px;
+      height: auto;
+    }
+
+    .site-footer__details {
+      display: grid;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .site-footer__details p,
+    .site-footer__meta {
+      margin: 0;
+    }
+
+    .site-footer__details strong {
+      display: block;
+      font-weight: 800;
+    }
+
+    .site-footer__details a {
+      font-weight: 700;
+    }
+
+    .site-footer__links {
+      justify-content: flex-end;
+    }
+
+    .site-footer__meta {
+      color: rgba(10, 29, 51, 0.54);
+    }
+
+    @media (max-width: 720px) {
+      .site-header__inner,
+      .site-footer__main {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .site-footer__details {
+        text-align: left;
+      }
+
+      .site-footer__links {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html#home" aria-label="Koru Services home">
+        <img class="brand__mark" src="https://static.wixstatic.com/media/454f39_a8cbb543f687411c94b241df4123b155~mv2.png/v1/fill/w_146,h_217,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Gold%20with%20TEXT.png" alt="Koru Services">
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#services">Services</a>
+        <a href="approach.html">Approach</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-copy">
+      <p>Policies</p>
+      <h1>Child Protection &amp; Privacy</h1>
+      <p class="lede">This page is reserved for Koru Services child protection and privacy information. The full content will be added once the current policy details are confirmed.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <div class="site-footer__main">
+        <img class="site-footer__logo" src="https://static.wixstatic.com/media/454f39_a8cbb543f687411c94b241df4123b155~mv2.png/v1/fill/w_146,h_217,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Gold%20with%20TEXT.png" alt="Koru Services logo">
+        <div class="site-footer__details">
+          <p>
+            <strong>Email</strong>
+            <a href="mailto:office@koruservices.co.nz">office@koruservices.co.nz</a>
+          </p>
+          <nav class="site-footer__links" aria-label="Footer">
+            <a href="child-protection-privacy.html">Child Protection &amp; Privacy</a>
+            <a href="gallery.html">Our Gallery</a>
+          </nav>
+        </div>
+      </div>
+      <p class="site-footer__meta">© 2026 Koru Services</p>
+    </div>
+  </footer>
+</body>
+</html>
