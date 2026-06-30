@@ -355,7 +355,17 @@
     }
 
     .hero .button--primary {
-      color: #ffcb86;
+      color: #f5f7fb;
+    }
+
+    .hero .button {
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.62),
+        0 7px 22px rgba(0, 0, 0, 0.38);
+    }
+
+    .hero .button:hover {
+      text-shadow: none;
     }
 
     .button--primary:hover {
@@ -441,10 +451,57 @@
       background: #fff;
     }
 
+    .contact {
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 140px;
+      background: #fff;
+      isolation: isolate;
+    }
+
+    .contact::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+    }
+
+    .contact__video {
+      position: absolute;
+      inset: -18px;
+      z-index: 0;
+      width: calc(100% + 36px);
+      height: calc(100% + 36px);
+      object-fit: cover;
+      filter: blur(8px) saturate(1.08);
+      transform: translate3d(0, var(--contact-video-y, 0px), 0) scale(1.08);
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .contact-wave {
+      position: absolute;
+      inset: auto 0 0;
+      z-index: 3;
+      height: 112px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .contact-wave svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .intro__grid,
     .story__grid,
     .team__grid,
     .contact__grid {
+      position: relative;
+      z-index: 2;
       display: grid;
       grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
       gap: 24px;
@@ -477,8 +534,7 @@
     }
 
     .intro__image,
-    .story__image,
-    .team__image {
+    .story__image {
       min-height: 360px;
       border-radius: 0;
       overflow: hidden;
@@ -488,7 +544,7 @@
     }
 
     .intro__image img,
-    .team__image img {
+    .story__image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -593,6 +649,133 @@
       display: block;
       margin-bottom: 6px;
       font-size: 1rem;
+    }
+
+    .team-profiles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      align-content: start;
+    }
+
+    .team-profile {
+      position: relative;
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+      min-height: 92px;
+      padding: 16px;
+      color: #08111e;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(8, 17, 30, 0.08);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+      transition:
+        opacity 240ms ease,
+        filter 240ms ease,
+        transform 240ms ease,
+        border-color 180ms ease,
+        grid-template-columns 260ms ease;
+    }
+
+    .team-profile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(0deg, rgba(255, 203, 134, 0.2), rgba(113, 200, 255, 0.08));
+      transform: translateY(100%);
+      transition: transform 260ms ease;
+    }
+
+    .team-profile:hover,
+    .team-profile:focus-visible {
+      border-color: rgba(244, 179, 94, 0.34);
+      transform: translateY(-2px);
+    }
+
+    .team-profile:hover::before,
+    .team-profile:focus-visible::before {
+      transform: translateY(0);
+    }
+
+    .team-profile.is-selected {
+      grid-column: 1 / -1;
+      grid-template-columns: 132px minmax(0, 1fr);
+      min-height: 188px;
+      padding: 22px;
+      border-color: rgba(244, 179, 94, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .team-profile.is-selected::before {
+      transform: translateY(0);
+    }
+
+    .team-profile.is-dimmed {
+      opacity: 0.28;
+      filter: grayscale(1) saturate(0.7);
+    }
+
+    .team-profile__avatar {
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(8, 17, 30, 0.08);
+      border-radius: 50%;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.7);
+      flex: 0 0 auto;
+      transition: width 260ms ease, height 260ms ease, transform 260ms ease;
+    }
+
+    .team-profile__avatar img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .team-profile.is-selected .team-profile__avatar {
+      width: 132px;
+      height: 132px;
+      transform: translateY(0);
+    }
+
+    .team-profile__description {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      margin-top: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      transition: grid-template-rows 260ms ease, opacity 220ms ease, margin-top 220ms ease;
+    }
+
+    .team-profile__description span {
+      overflow: hidden;
+    }
+
+    .team-profile.is-selected .team-profile__description {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 10px;
+    }
+
+    .team-profile h3 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .team-profile p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
     .services__grid {
@@ -739,12 +922,14 @@
       transition: transform 260ms ease;
     }
 
-    .partner-logo:hover {
+    .partner-logo:hover,
+    .partner-logo:focus-within {
       border-color: rgba(244, 179, 94, 0.34);
       transform: translateY(-2px);
     }
 
-    .partner-logo:hover::before {
+    .partner-logo:hover::before,
+    .partner-logo:focus-within::before {
       transform: translateY(0);
     }
 
@@ -754,10 +939,13 @@
       max-height: 84px;
       width: auto;
       object-fit: contain;
-      transition: transform 220ms ease;
+      filter: grayscale(1) saturate(0) contrast(1.06);
+      transition: filter 280ms ease, transform 220ms ease;
     }
 
-    .partner-logo:hover img {
+    .partner-logo:hover img,
+    .partner-logo:focus-within img {
+      filter: grayscale(0) saturate(1) contrast(1);
       transform: translateY(-2px);
     }
 
@@ -991,9 +1179,22 @@
       .cta,
       .service-card,
       .partner-logo,
-      .intro__image,
-      .team__image {
+      .intro__image {
         padding: 22px;
+      }
+
+      .team-profiles {
+        grid-template-columns: 1fr;
+      }
+
+      .team-profile.is-selected {
+        grid-template-columns: 96px minmax(0, 1fr);
+        min-height: 154px;
+      }
+
+      .team-profile.is-selected .team-profile__avatar {
+        width: 96px;
+        height: 96px;
       }
 
       .contact-form__row {
@@ -1013,8 +1214,8 @@
         <nav class="nav" aria-label="Primary">
           <a href="index.html#home">Home</a>
           <a href="index.html#services">Services</a>
-          <a href="approach.html">Approach</a>
-          <a href="index.html#contact">Contact</a>
+          <a href="approach.html">Connect</a>
+          <a href="index.html#contact">Contact Us</a>
         </nav>
       </div>
     </header>
@@ -1042,7 +1243,7 @@
 
             <div class="hero__actions">
               <a class="button button--primary" href="#contact">Start your story</a>
-              <a class="button button--secondary" href="#services">Explore the site</a>
+              <a class="button button--secondary" href="approach.html">Connect with us</a>
             </div>
 
           </div>
@@ -1155,8 +1356,136 @@
             </div>
           </div>
 
-          <div class="team__image">
-            <img src="https://static.wixstatic.com/media/f118c5_8ee015db1bda435b8f4e0a14d14e99c2~mv2.jpg/v1/fill/w_488,h_477,al_t,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f118c5_8ee015db1bda435b8f4e0a14d14e99c2~mv2.jpg" alt="Koru Services team photo">
+          <div class="team-profiles" aria-label="Staff profiles">
+            <a class="team-profile" href="#" aria-label="Craig Hobson profile" aria-expanded="false" aria-controls="profile-craig-hobson" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_b727c8e51ab242f99f92f7a31978c57b~mv2.png/v1/crop/x_5,y_0,w_317,h_317/fill/w_199,h_199,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screenshot%202025-08-07%20at%201_edited.png" alt="Craig Hobson">
+              </span>
+              <div class="team-profile__body">
+                <h3>Craig Hobson</h3>
+                <p>Executive Director</p>
+                <div class="team-profile__description" id="profile-craig-hobson" aria-hidden="true">
+                  <span>Craig profile placeholder. Add a short summary about his leadership, experience, and the mahi he guides at Koru Services.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Kiri Sloane-Hobson profile" aria-expanded="false" aria-controls="profile-kiri-sloane-hobson" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_9e57d3a83f914e49a3496994323655b1~mv2.jpeg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/kiri.jpeg" alt="Kiri Sloane-Hobson">
+              </span>
+              <div class="team-profile__body">
+                <h3>Kiri Sloane-Hobson</h3>
+                <p>Managing Director</p>
+                <div class="team-profile__description" id="profile-kiri-sloane-hobson" aria-hidden="true">
+                  <span>Kiri profile placeholder. Add a short summary about her management focus, relationship-led approach, and contribution to the team.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Vince Rudolph profile" aria-expanded="false" aria-controls="profile-vince-rudolph" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_d3de1329ddf04361abd0cbf38d1daf3b~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/gray-human-icon-profile-placeholder-vector-35850819.jpg" alt="Vince Rudolph placeholder profile image">
+              </span>
+              <div class="team-profile__body">
+                <h3>Vince Rudolph</h3>
+                <p>Kaitiaki | Programme Facilitator</p>
+                <div class="team-profile__description" id="profile-vince-rudolph" aria-hidden="true">
+                  <span>Vince profile placeholder. Add a short summary about his facilitation style, community support, and the outcomes he helps people reach.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Tony Cook profile" aria-expanded="false" aria-controls="profile-tony-cook" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_d3de1329ddf04361abd0cbf38d1daf3b~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/gray-human-icon-profile-placeholder-vector-35850819.jpg" alt="Tony Cook placeholder profile image">
+              </span>
+              <div class="team-profile__body">
+                <h3>Tony Cook</h3>
+                <p>Kaitiaki | Programme Facilitator</p>
+                <div class="team-profile__description" id="profile-tony-cook" aria-hidden="true">
+                  <span>Tony profile placeholder. Add a short summary about his programme work, practical support, and strengths across facilitation.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Annie Rudolph profile" aria-expanded="false" aria-controls="profile-annie-rudolph" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_d3de1329ddf04361abd0cbf38d1daf3b~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/gray-human-icon-profile-placeholder-vector-35850819.jpg" alt="Annie Rudolph placeholder profile image">
+              </span>
+              <div class="team-profile__body">
+                <h3>Annie Rudolph</h3>
+                <p>Programme Facilitator</p>
+                <div class="team-profile__description" id="profile-annie-rudolph" aria-hidden="true">
+                  <span>Annie profile placeholder. Add a short summary about her planning, programme delivery, and the care she brings to the work.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Lisa Jones profile" aria-expanded="false" aria-controls="profile-lisa-jones" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_d3de1329ddf04361abd0cbf38d1daf3b~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/gray-human-icon-profile-placeholder-vector-35850819.jpg" alt="Lisa Jones placeholder profile image">
+              </span>
+              <div class="team-profile__body">
+                <h3>Lisa Jones</h3>
+                <p>HR &amp; Compliance</p>
+                <div class="team-profile__description" id="profile-lisa-jones" aria-hidden="true">
+                  <span>Lisa profile placeholder. Add a short summary about her HR, compliance, and operational support across Koru Services.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Simone Edwards profile" aria-expanded="false" aria-controls="profile-simone-edwards" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_d3de1329ddf04361abd0cbf38d1daf3b~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/gray-human-icon-profile-placeholder-vector-35850819.jpg" alt="Simone Edwards placeholder profile image">
+              </span>
+              <div class="team-profile__body">
+                <h3>Simone Edwards</h3>
+                <p>Executive Operations</p>
+                <div class="team-profile__description" id="profile-simone-edwards" aria-hidden="true">
+                  <span>Simone profile placeholder. Add a short summary about her operations role, coordination strengths, and support for the wider team.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Katherine Blithe profile" aria-expanded="false" aria-controls="profile-katherine-blithe" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_d3de1329ddf04361abd0cbf38d1daf3b~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/gray-human-icon-profile-placeholder-vector-35850819.jpg" alt="Katherine Blithe placeholder profile image">
+              </span>
+              <div class="team-profile__body">
+                <h3>Katherine Blithe</h3>
+                <p>Finance</p>
+                <div class="team-profile__description" id="profile-katherine-blithe" aria-hidden="true">
+                  <span>Katherine profile placeholder. Add a short summary about her finance work, attention to detail, and support for strong systems.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Monique Zwaan profile" aria-expanded="false" aria-controls="profile-monique-zwaan" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_766f46b66c0a4bffa9a3dfa7fa03a165~mv2.jpg/v1/fill/w_199,h_199,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/monique.jpg" alt="Monique Zwaan">
+              </span>
+              <div class="team-profile__body">
+                <h3>Monique Zwaan</h3>
+                <p>Strategic Advisor / Actions</p>
+                <div class="team-profile__description" id="profile-monique-zwaan" aria-hidden="true">
+                  <span>Monique profile placeholder. Add a short summary about her strategic advice, action planning, and the perspective she brings to projects.</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="team-profile" href="#" aria-label="Dave Lasike profile" aria-expanded="false" aria-controls="profile-dave-lasike" data-team-profile>
+              <span class="team-profile__avatar">
+                <img src="https://static.wixstatic.com/media/f118c5_7565e3f5e5024bb3a8b59fd86455a0cf~mv2.png/v1/crop/x_0,y_108,w_1024,h_1022/fill/w_199,h_199,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/dave_PNG.png" alt="Dave Lasike">
+              </span>
+              <div class="team-profile__body">
+                <h3>Dave Lasike</h3>
+                <p>IT &amp; Systems</p>
+                <div class="team-profile__description" id="profile-dave-lasike" aria-hidden="true">
+                  <span>Dave profile placeholder. Add a short summary about his IT, systems, and digital support across Koru Services.</span>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </section>
@@ -1191,6 +1520,9 @@
       </section>
 
       <section class="contact" id="contact">
+        <video class="contact__video" autoplay muted loop playsinline aria-hidden="true">
+          <source src="https://video.wixstatic.com/video/f118c5_e1fbdc11d90e4f83bbb9a020ed6f6df5/1080p/mp4/file.mp4" type="video/mp4">
+        </video>
         <div class="container contact__grid">
           <div class="contact__copy">
             <p class="section__kicker">Kōrero Mai</p>
@@ -1231,6 +1563,12 @@
               </div>
             </form>
           </div>
+        </div>
+        <div class="contact-wave" aria-hidden="true">
+          <svg viewBox="0 0 1440 160" preserveAspectRatio="none" focusable="false">
+            <path d="M0 92C220 12 410 12 610 92C820 176 1050 176 1440 48V160H0V92Z" fill="rgba(255, 255, 255, 0.96)"></path>
+            <path d="M0 118C230 46 430 42 640 112C860 186 1100 168 1440 76V160H0V118Z" fill="rgba(255, 255, 255, 0.92)"></path>
+          </svg>
         </div>
       </section>
     </main>
@@ -1340,9 +1678,10 @@
     (function () {
       const hero = document.querySelector('.hero');
       const introImage = document.querySelector('.intro__image');
+      const contactVideo = document.querySelector('.contact__video');
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      if ((!hero && !introImage) || prefersReducedMotion) {
+      if ((!hero && !introImage && !contactVideo) || prefersReducedMotion) {
         return;
       }
 
@@ -1376,6 +1715,18 @@
           introImage.style.setProperty('--intro-image-y', `${introOffset.toFixed(2)}px`);
         }
 
+        if (contactVideo) {
+          const contactRect = contactVideo.closest('.contact').getBoundingClientRect();
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const contactCenter = contactRect.top + contactRect.height / 2;
+          const viewportCenter = viewportHeight / 2;
+          const maxDistance = (viewportHeight + contactRect.height) / 2;
+          const normalizedDistance = Math.max(-1, Math.min(1, (contactCenter - viewportCenter) / maxDistance));
+          const contactOffset = normalizedDistance * contactRect.height * -0.1;
+
+          contactVideo.style.setProperty('--contact-video-y', `${contactOffset.toFixed(2)}px`);
+        }
+
         ticking = false;
       }
 
@@ -1389,6 +1740,43 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onScroll);
       updateParallax();
+    })();
+
+    (function () {
+      const profiles = Array.from(document.querySelectorAll('[data-team-profile]'));
+
+      if (!profiles.length) {
+        return;
+      }
+
+      function setSelectedProfile(selectedProfile) {
+        profiles.forEach((profile) => {
+          const isSelected = profile === selectedProfile;
+          const isDimmed = Boolean(selectedProfile) && !isSelected;
+          const description = document.getElementById(profile.getAttribute('aria-controls'));
+
+          profile.classList.toggle('is-selected', isSelected);
+          profile.classList.toggle('is-dimmed', isDimmed);
+          profile.setAttribute('aria-expanded', isSelected ? 'true' : 'false');
+
+          if (description) {
+            description.setAttribute('aria-hidden', isSelected ? 'false' : 'true');
+          }
+        });
+      }
+
+      profiles.forEach((profile) => {
+        profile.addEventListener('click', (event) => {
+          event.preventDefault();
+          setSelectedProfile(profile);
+        });
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          setSelectedProfile(null);
+        }
+      });
     })();
   </script>
   <script type="module">

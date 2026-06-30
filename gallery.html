@@ -12,6 +12,8 @@
     :root {
       --text: #08111e;
       --muted: rgba(8, 17, 30, 0.72);
+      --accent: #f4b35e;
+      --accent-strong: #ffcb86;
     }
 
     * {
@@ -46,17 +48,15 @@
       top: 0;
       z-index: 20;
       backdrop-filter: blur(18px);
-      background: linear-gradient(180deg, rgba(248, 251, 255, 0.94), rgba(248, 251, 255, 0.78));
+      background: linear-gradient(180deg, rgba(248, 251, 255, 0.88), rgba(248, 251, 255, 0.7));
       border-bottom: 1px solid rgba(10, 29, 51, 0.08);
     }
 
-    .site-header__inner,
-    .site-footer__main {
+    .site-header__inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 24px;
-      flex-wrap: wrap;
     }
 
     .site-header__inner {
@@ -64,28 +64,58 @@
       padding: 12px 0;
     }
 
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+    }
+
     .brand__mark {
       width: 180px;
       height: auto;
+      border-radius: 0;
+      object-fit: cover;
+      box-shadow: none;
+      background: transparent;
+      border: 0;
     }
 
-    .nav,
-    .site-footer__links {
+    .nav {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    .nav a,
-    .site-footer__links a {
+    .nav a {
+      position: relative;
+      padding: 10px 14px;
       color: rgba(10, 29, 51, 0.78);
-      font-weight: 700;
+      overflow: hidden;
+      isolation: isolate;
+      text-shadow: 0 2px 8px rgba(8, 17, 30, 0.16);
+      transition: color 180ms ease, transform 180ms ease;
     }
 
-    .nav a:hover,
-    .site-footer__links a:hover {
+    .nav a::before {
+      content: "";
+      position: absolute;
+      inset: 7px 4px;
+      z-index: -1;
+      background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 240ms ease;
+    }
+
+    .nav a:hover {
       color: #08111e;
+      transform: translateY(-1px);
+    }
+
+    .nav a:hover::before {
+      transform: scaleX(1);
     }
 
     main {
@@ -119,7 +149,8 @@
     }
 
     .site-footer {
-      padding: 34px 0;
+      padding: 28px 0 36px;
+      color: rgba(10, 29, 51, 0.72);
       background: #fff;
       font-size: 0.92rem;
     }
@@ -129,6 +160,14 @@
       padding-top: 26px;
       display: grid;
       gap: 22px;
+    }
+
+    .site-footer__main {
+      display: flex;
+      justify-content: space-between;
+      gap: 28px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     .site-footer__logo {
@@ -147,17 +186,35 @@
       margin: 0;
     }
 
+    .site-footer__details p {
+      line-height: 1.6;
+    }
+
     .site-footer__details strong {
       display: block;
+      color: #08111e;
       font-weight: 800;
     }
 
     .site-footer__details a {
+      color: #08111e;
       font-weight: 700;
     }
 
     .site-footer__links {
+      display: flex;
       justify-content: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .site-footer__links a {
+      color: rgba(10, 29, 51, 0.76);
+      font-weight: 700;
+    }
+
+    .site-footer__links a:hover {
+      color: #08111e;
     }
 
     .site-footer__meta {
@@ -165,7 +222,11 @@
     }
 
     @media (max-width: 720px) {
-      .site-header__inner,
+      .site-header__inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .site-footer__main {
         align-items: flex-start;
         flex-direction: column;
@@ -175,9 +236,7 @@
         text-align: left;
       }
 
-      .site-footer__links {
-        justify-content: flex-start;
-      }
+      .site-footer__links { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -185,13 +244,13 @@
   <header class="site-header">
     <div class="container site-header__inner">
       <a class="brand" href="index.html#home" aria-label="Koru Services home">
-        <img class="brand__mark" src="https://static.wixstatic.com/media/454f39_a8cbb543f687411c94b241df4123b155~mv2.png/v1/fill/w_146,h_217,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Gold%20with%20TEXT.png" alt="Koru Services">
+        <img class="brand__mark" src="https://static.wixstatic.com/media/454f39_af49ab30f257435287b433b669c81b61~mv2.png/v1/fill/w_183,h_90,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/454f39_af49ab30f257435287b433b669c81b61~mv2.png" alt="Koru Services logo">
       </a>
       <nav class="nav" aria-label="Primary">
         <a href="index.html#home">Home</a>
         <a href="index.html#services">Services</a>
-        <a href="approach.html">Approach</a>
-        <a href="index.html#contact">Contact</a>
+        <a href="approach.html">Connect</a>
+        <a href="index.html#contact">Contact Us</a>
       </nav>
     </div>
   </header>
