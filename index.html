@@ -62,6 +62,13 @@
     .page-shell {
       position: relative;
       isolation: isolate;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-shell > main {
+      flex: 1;
     }
 
     .page-shell::before,
@@ -633,6 +640,25 @@
       transform: translate3d(0, 0, 0);
     }
 
+    .story__effect {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 260ms ease;
+    }
+
+    .story__effect canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .story__effect.is-active {
+      opacity: 1;
+    }
+
     .story__quote,
     .team__note,
     .contact__note {
@@ -821,6 +847,26 @@
       transform: translateY(0);
     }
 
+    .service-card__media {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+      pointer-events: none;
+      transition: opacity 260ms ease;
+    }
+
+    .service-card--media {
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .service-card--media:hover .service-card__media {
+      opacity: 1;
+    }
+
     .service-card__icon {
       position: relative;
       z-index: 1;
@@ -833,6 +879,7 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       margin-bottom: 18px;
       font-size: 1.2rem;
+      transition: color 220ms ease, text-shadow 220ms ease, background 220ms ease;
     }
 
     .service-card h3 {
@@ -841,6 +888,7 @@
       margin: 0;
       font-size: 1.25rem;
       letter-spacing: -0.03em;
+      transition: color 220ms ease, text-shadow 220ms ease;
     }
 
     .service-card p {
@@ -849,6 +897,20 @@
       margin: 12px 0 0;
       color: var(--muted);
       line-height: 1.72;
+      transition: color 220ms ease, text-shadow 220ms ease;
+    }
+
+    .service-card--media:hover .service-card__icon,
+    .service-card--media:hover h3,
+    .service-card--media:hover p {
+      color: #fff;
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.62),
+        0 7px 22px rgba(0, 0, 0, 0.38);
+    }
+
+    .service-card--media:hover .service-card__icon {
+      background: rgba(8, 17, 30, 0.18);
     }
 
     .services__lede {
@@ -1306,6 +1368,7 @@
             <div class="story__photo-frame">
               <img class="is-active" src="https://static.wixstatic.com/media/f118c5_96af5fda3cd643a98bcad32dfd76efd8~mv2.jpg" alt="Koru Services team and community image" data-story-slide>
               <img src="https://static.wixstatic.com/media/f118c5_8ee015db1bda435b8f4e0a14d14e99c2~mv2.jpg/v1/fill/w_488,h_477,al_t,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f118c5_8ee015db1bda435b8f4e0a14d14e99c2~mv2.jpg" alt="Koru Services team photo" data-story-slide>
+              <div class="story__effect" aria-hidden="true"></div>
             </div>
           </div>
         </div>
@@ -1322,19 +1385,24 @@
           </div>
 
           <div class="services__grid">
-            <article class="service-card">
+            <article class="service-card service-card--media">
+              <video class="service-card__media" autoplay muted loop playsinline aria-hidden="true">
+                <source src="https://video.wixstatic.com/video/f118c5_e1fbdc11d90e4f83bbb9a020ed6f6df5/1080p/mp4/file.mp4" type="video/mp4">
+              </video>
               <div class="service-card__icon">CS</div>
               <h3>Corporate Services</h3>
               <p>Practical support that helps teams operate clearly, professionally, and with confidence.</p>
             </article>
 
-            <article class="service-card">
+            <article class="service-card service-card--media">
+              <img class="service-card__media" src="https://static.wixstatic.com/media/f118c5_bd1f3ff8623e42ee85195252c7eec642~mv2.jpg" alt="" aria-hidden="true">
               <div class="service-card__icon">ST</div>
               <h3>Strategy</h3>
               <p>Focused planning that connects the big picture to the next right step.</p>
             </article>
 
-            <article class="service-card">
+            <article class="service-card service-card--media">
+              <img class="service-card__media" src="https://static.wixstatic.com/media/f118c5_f863c4f939204ae8bcea07f52fedf02e~mv2.png" alt="" aria-hidden="true">
               <div class="service-card__icon">PE</div>
               <h3>People</h3>
               <p>Human-centred work that supports communities, relationships, and meaningful outcomes.</p>
@@ -2023,6 +2091,286 @@
       }, { passive: true });
 
       hero.addEventListener('pointerleave', () => {
+        hovered = false;
+        previousPointer = null;
+        mount.classList.remove('is-active');
+        startLoop();
+      });
+
+      window.addEventListener('resize', resize);
+    })();
+
+    (function () {
+      const storyPhoto = document.querySelector('[data-story-photo]');
+      const mount = document.querySelector('.story__effect');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!storyPhoto || !mount || prefersReducedMotion) {
+        return;
+      }
+
+      let THREE;
+      let renderer;
+      let scene;
+      let camera;
+      let material;
+      let texture;
+      let loader;
+      let resizeObserver;
+      let mutationObserver;
+      let frameId = 0;
+      let hovered = false;
+      let isReady = false;
+      let isLoading = false;
+      let loadedSrc = "";
+      let previousPointer = null;
+      const pointer = { x: 0.5, y: 0.5 };
+      const velocity = { x: 0, y: 0 };
+
+      const fragmentShader = `
+        precision highp float;
+
+        uniform sampler2D uTexture;
+        uniform float u_time;
+        uniform float u_intensity;
+        uniform vec2 uMouse;
+        uniform vec2 uVelocity;
+        uniform vec2 uResolution;
+        uniform vec2 uImageResolution;
+        varying vec2 vUv;
+
+        vec2 coverUv(vec2 uv, vec2 screen, vec2 image) {
+          float screenRatio = screen.x / screen.y;
+          float imageRatio = image.x / image.y;
+          vec2 scale = vec2(1.0);
+
+          if (screenRatio > imageRatio) {
+            scale.y = imageRatio / screenRatio;
+          } else {
+            scale.x = screenRatio / imageRatio;
+          }
+
+          return (uv - 0.5) * scale + 0.5;
+        }
+
+        float rand(vec2 co) {
+          return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+        }
+
+        void main() {
+          vec2 uv = coverUv(vUv, uResolution, uImageResolution);
+          vec2 mouse = vec2(uMouse.x, 1.0 - uMouse.y);
+          float aspect = uResolution.x / uResolution.y;
+          vec2 delta = (vUv - mouse) * vec2(aspect, 1.0);
+          float dist = length(delta);
+          float influence = smoothstep(0.30, 0.0, dist) * u_intensity;
+          float spread = influence * 0.010 * (1.0 + 0.28 * sin(u_time * 2.1));
+          vec2 dir = normalize(delta + 0.0001);
+          float r = texture2D(uTexture, clamp(uv + dir * spread, 0.0, 1.0)).r;
+          float g = texture2D(uTexture, clamp(uv, 0.0, 1.0)).g;
+          float b = texture2D(uTexture, clamp(uv - dir * spread, 0.0, 1.0)).b;
+          vec3 color = vec3(r, g, b);
+
+          color *= mix(1.0, 1.18, influence);
+
+          float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+          color = mix(color, mix(vec3(luma), color, 1.32), influence);
+
+          float grain = rand(vUv + fract(u_time * 0.07)) * 0.06 - 0.03;
+          color += grain * influence;
+
+          gl_FragColor = vec4(clamp(color, 0.0, 1.0), influence);
+        }
+      `;
+
+      function activeStoryImage() {
+        return storyPhoto.querySelector('[data-story-slide].is-active') || storyPhoto.querySelector('[data-story-slide]');
+      }
+
+      async function setTextureFromActiveImage() {
+        const image = activeStoryImage();
+
+        if (!image || !loader || !material) {
+          return;
+        }
+
+        const src = image.currentSrc || image.src;
+
+        if (!src || src === loadedSrc) {
+          return;
+        }
+
+        try {
+          const nextTexture = await loader.loadAsync(src);
+          nextTexture.colorSpace = THREE.SRGBColorSpace;
+          nextTexture.minFilter = THREE.LinearFilter;
+          nextTexture.magFilter = THREE.LinearFilter;
+
+          if (texture) {
+            texture.dispose();
+          }
+
+          texture = nextTexture;
+          loadedSrc = src;
+          material.uniforms.uTexture.value = texture;
+          material.uniforms.uImageResolution.value.set(image.naturalWidth || 16, image.naturalHeight || 9);
+        } catch (error) {
+          mount.hidden = true;
+        }
+      }
+
+      async function init() {
+        if (isReady) {
+          await setTextureFromActiveImage();
+          return true;
+        }
+
+        if (isLoading) {
+          return false;
+        }
+
+        isLoading = true;
+
+        try {
+          THREE = await import('three');
+          renderer = new THREE.WebGLRenderer({
+            alpha: true,
+            antialias: true,
+            preserveDrawingBuffer: true,
+            powerPreference: 'high-performance',
+          });
+        } catch (error) {
+          isLoading = false;
+          mount.hidden = true;
+          return false;
+        }
+
+        loader = new THREE.TextureLoader();
+        loader.setCrossOrigin('anonymous');
+
+        scene = new THREE.Scene();
+        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        camera.position.z = 1;
+
+        material = new THREE.ShaderMaterial({
+          transparent: true,
+          depthTest: false,
+          depthWrite: false,
+          uniforms: {
+            uTexture: { value: null },
+            u_time: { value: 0 },
+            u_intensity: { value: 0 },
+            uMouse: { value: new THREE.Vector2(pointer.x, pointer.y) },
+            uVelocity: { value: new THREE.Vector2(0, 0) },
+            uResolution: { value: new THREE.Vector2(1, 1) },
+            uImageResolution: { value: new THREE.Vector2(16, 9) },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+
+            void main() {
+              vUv = uv;
+              gl_Position = vec4(position.xy, 0.0, 1.0);
+            }
+          `,
+          fragmentShader,
+        });
+
+        renderer.setClearColor(0x000000, 0);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+        mount.appendChild(renderer.domElement);
+        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+        resizeObserver = new ResizeObserver(resize);
+        resizeObserver.observe(mount);
+        resize();
+
+        mutationObserver = new MutationObserver(() => {
+          setTextureFromActiveImage();
+        });
+        storyPhoto.querySelectorAll('[data-story-slide]').forEach((slide) => {
+          mutationObserver.observe(slide, { attributes: true, attributeFilter: ['class'] });
+        });
+
+        await setTextureFromActiveImage();
+        isReady = true;
+        isLoading = false;
+        return true;
+      }
+
+      function resize() {
+        if (!renderer || !material) {
+          return;
+        }
+
+        const rect = mount.getBoundingClientRect();
+        const width = Math.max(1, rect.width);
+        const height = Math.max(1, rect.height);
+
+        renderer.setSize(width, height, false);
+        material.uniforms.uResolution.value.set(width, height);
+      }
+
+      function updatePointer(event) {
+        const rect = storyPhoto.getBoundingClientRect();
+        const nextX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        const nextY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+
+        if (previousPointer) {
+          velocity.x = nextX - previousPointer.x;
+          velocity.y = nextY - previousPointer.y;
+        }
+
+        pointer.x = nextX;
+        pointer.y = nextY;
+        previousPointer = { x: nextX, y: nextY };
+      }
+
+      function animate(time = 0) {
+        if (!material || !renderer || !scene || !camera || !texture) {
+          frameId = 0;
+          return;
+        }
+
+        const target = hovered ? 1 : 0;
+        material.uniforms.u_intensity.value += (target - material.uniforms.u_intensity.value) * 0.045;
+        material.uniforms.u_time.value = time * 0.001;
+        material.uniforms.uMouse.value.set(pointer.x, pointer.y);
+        material.uniforms.uVelocity.value.set(velocity.x, velocity.y);
+        velocity.x *= 0.92;
+        velocity.y *= 0.92;
+        renderer.render(scene, camera);
+
+        if (hovered || material.uniforms.u_intensity.value > 0.01) {
+          frameId = window.requestAnimationFrame(animate);
+        } else {
+          frameId = 0;
+        }
+      }
+
+      function startLoop() {
+        if (!frameId) {
+          frameId = window.requestAnimationFrame(animate);
+        }
+      }
+
+      storyPhoto.addEventListener('pointerenter', async (event) => {
+        updatePointer(event);
+
+        if (!(await init())) {
+          return;
+        }
+
+        hovered = true;
+        mount.classList.add('is-active');
+        startLoop();
+      }, { passive: true });
+
+      storyPhoto.addEventListener('pointermove', (event) => {
+        updatePointer(event);
+      }, { passive: true });
+
+      storyPhoto.addEventListener('pointerleave', () => {
         hovered = false;
         previousPointer = null;
         mount.classList.remove('is-active');

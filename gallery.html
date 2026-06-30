@@ -26,6 +26,8 @@
       color: var(--text);
       background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 52%, #fff 100%);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     a {
@@ -119,10 +121,25 @@
     }
 
     main {
+      position: relative;
+      flex: 1;
       padding: 72px 0 96px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: url("https://static.wixstatic.com/media/f118c5_1bc3ea45c1674897bc5e89042dca1b1d~mv2.jpg") center / cover no-repeat;
+      opacity: 0.2;
     }
 
     .page-copy {
+      position: relative;
+      z-index: 1;
       max-width: 760px;
     }
 
