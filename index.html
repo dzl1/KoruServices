@@ -184,6 +184,7 @@
       background: #09111d;
       isolation: isolate;
       color: #f5f7fb;
+      transition: min-height 1100ms cubic-bezier(0.2, 0.72, 0.2, 1);
     }
 
     .hero__video {
@@ -213,26 +214,6 @@
       z-index: 1;
     }
 
-    .hero__physics {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0;
-      mix-blend-mode: screen;
-      transition: opacity 360ms ease;
-    }
-
-    .hero__physics canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .hero__physics.is-active {
-      opacity: 0.78;
-    }
-
     .hero__content {
       position: relative;
       z-index: 2;
@@ -240,8 +221,12 @@
       align-items: center;
       padding: 56px 0 60px;
       min-height: clamp(540px, 76vh, 720px);
-      transform: translate3d(0, var(--hero-content-y, 0px), 0);
-      opacity: var(--hero-content-opacity, 1);
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+      transition:
+        min-height 1100ms cubic-bezier(0.2, 0.72, 0.2, 1),
+        opacity 700ms ease,
+        transform 700ms ease;
       will-change: transform, opacity;
     }
 
@@ -405,6 +390,216 @@
       will-change: transform;
     }
 
+    .hero__loader {
+      --loader-blue: rgba(113, 200, 255, 0.92);
+      --loader-gold: rgba(255, 203, 134, 0.9);
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: grid;
+      place-items: center;
+      color: rgba(245, 247, 251, 0.92);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.62),
+        0 7px 22px rgba(0, 0, 0, 0.38);
+      transition: opacity 280ms ease;
+    }
+
+    .hero__loader-core {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(68vw, 420px);
+      aspect-ratio: 1;
+      isolation: isolate;
+    }
+
+    .hero__loader-grid {
+      position: absolute;
+      inset: 32%;
+      z-index: 1;
+      border: 1px solid rgba(113, 200, 255, 0.32);
+      box-shadow:
+        inset 0 0 22px rgba(113, 200, 255, 0.12),
+        0 0 24px rgba(255, 203, 134, 0.1);
+      opacity: 0.72;
+      transform: rotate(45deg);
+      animation: loader-grid-scan 1800ms ease-in-out infinite;
+    }
+
+    .hero__loader-readout {
+      position: relative;
+      z-index: 3;
+      min-width: 5ch;
+      padding: 9px 12px;
+      border: 1px solid rgba(245, 247, 251, 0.34);
+      background: rgba(8, 17, 30, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(113, 200, 255, 0.12),
+        0 0 34px rgba(113, 200, 255, 0.22),
+        0 12px 40px rgba(0, 0, 0, 0.32);
+      opacity: 0.5;
+      text-align: center;
+      backdrop-filter: blur(7px);
+    }
+
+    .hero__loader-readout::before,
+    .hero__loader-readout::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 54px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 247, 251, 0.72));
+      transform: translateY(-50%);
+    }
+
+    .hero__loader-readout::before {
+      right: calc(100% + 8px);
+    }
+
+    .hero__loader-readout::after {
+      left: calc(100% + 8px);
+      transform: translateY(-50%) rotate(180deg);
+    }
+
+    .hero__loader-line {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: min(29vw, 178px);
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--loader-blue) 56%, var(--loader-gold) 100%);
+      box-shadow: 0 0 14px rgba(113, 200, 255, 0.32);
+      transform-origin: left center;
+      animation: loader-line-connect 1700ms ease-in-out infinite;
+    }
+
+    .hero__loader-line::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      background: rgba(245, 247, 251, 0.82);
+      box-shadow:
+        0 0 12px var(--loader-blue),
+        0 0 18px rgba(255, 203, 134, 0.32);
+    }
+
+    .hero__loader-line--one {
+      --loader-angle: -42deg;
+      transform: rotate(-42deg) translateX(38px) scaleX(0);
+      animation-delay: 0ms;
+    }
+
+    .hero__loader-line--two {
+      --loader-angle: 18deg;
+      transform: rotate(18deg) translateX(38px) scaleX(0);
+      animation-delay: 180ms;
+    }
+
+    .hero__loader-line--three {
+      --loader-angle: 142deg;
+      transform: rotate(142deg) translateX(38px) scaleX(0);
+      animation-delay: 360ms;
+    }
+
+    .hero__loader-line--four {
+      --loader-angle: 218deg;
+      transform: rotate(218deg) translateX(38px) scaleX(0);
+      animation-delay: 540ms;
+    }
+
+    .hero__loader-node {
+      position: absolute;
+      z-index: 2;
+      width: 8px;
+      height: 8px;
+      background: rgba(245, 247, 251, 0.88);
+      box-shadow:
+        0 0 14px var(--loader-blue),
+        0 0 24px rgba(255, 203, 134, 0.24);
+      animation: loader-node-pulse 1600ms ease-in-out infinite;
+    }
+
+    .hero__loader-node--one {
+      top: 19%;
+      right: 27%;
+      animation-delay: 120ms;
+    }
+
+    .hero__loader-node--two {
+      top: 42%;
+      right: 13%;
+      animation-delay: 320ms;
+    }
+
+    .hero__loader-node--three {
+      bottom: 20%;
+      left: 27%;
+      animation-delay: 520ms;
+    }
+
+    .hero__loader-node--four {
+      top: 33%;
+      left: 16%;
+      animation-delay: 720ms;
+    }
+
+    @keyframes loader-line-connect {
+      0%,
+      14% {
+        opacity: 0;
+        transform: rotate(var(--loader-angle, 0deg)) translateX(38px) scaleX(0);
+      }
+
+      42%,
+      76% {
+        opacity: 1;
+        transform: rotate(var(--loader-angle, 0deg)) translateX(38px) scaleX(1);
+      }
+
+      100% {
+        opacity: 0.28;
+        transform: rotate(var(--loader-angle, 0deg)) translateX(38px) scaleX(0.18);
+      }
+    }
+
+    @keyframes loader-node-pulse {
+      0%,
+      100% {
+        opacity: 0.32;
+        transform: scale(0.78);
+      }
+
+      48% {
+        opacity: 1;
+        transform: scale(1.18);
+      }
+    }
+
+    @keyframes loader-grid-scan {
+      0%,
+      100% {
+        opacity: 0.38;
+        transform: rotate(45deg) scale(0.92);
+      }
+
+      50% {
+        opacity: 0.82;
+        transform: rotate(45deg) scale(1.06);
+      }
+    }
+
     .hero-wave {
       position: relative;
       z-index: 3;
@@ -412,12 +607,89 @@
       margin-top: -112px;
       overflow: hidden;
       pointer-events: none;
+      transition: transform 1100ms cubic-bezier(0.2, 0.72, 0.2, 1);
     }
 
     .hero-wave svg {
       display: block;
       width: 100%;
       height: 100%;
+    }
+
+    .hero-wave,
+    .intro,
+    .story,
+    .services,
+    .team,
+    .partners,
+    .contact {
+      transition: transform 1100ms cubic-bezier(0.2, 0.72, 0.2, 1), opacity 800ms ease;
+    }
+
+    .page-shell.is-hero-intro .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      background: linear-gradient(180deg, rgba(8, 17, 30, 0.28), rgba(8, 17, 30, 0));
+      border-bottom-color: transparent;
+    }
+
+    .page-shell.is-hero-intro .nav a {
+      color: rgba(245, 247, 251, 0.88);
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.62),
+        0 7px 22px rgba(0, 0, 0, 0.38);
+    }
+
+    .page-shell.is-hero-intro .hero {
+      min-height: 100svh;
+    }
+
+    .page-shell.is-hero-intro .hero__content {
+      min-height: 100svh;
+      opacity: 0;
+      transform: translate3d(0, 24px, 0);
+    }
+
+    .page-shell.is-hero-intro .hero__hero-pulse {
+      opacity: 0;
+    }
+
+    .page-shell.is-hero-intro .hero__loader {
+      opacity: 1;
+    }
+
+    .page-shell.is-hero-intro .hero-wave {
+      transform: translate3d(0, 120px, 0);
+      opacity: 0;
+    }
+
+    .page-shell.is-hero-intro .intro,
+    .page-shell.is-hero-intro .story,
+    .page-shell.is-hero-intro .services,
+    .page-shell.is-hero-intro .team,
+    .page-shell.is-hero-intro .partners,
+    .page-shell.is-hero-intro .contact {
+      transform: translate3d(0, 120px, 0);
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero,
+      .hero__content,
+      .hero-wave {
+        transition: none;
+      }
+
+      .hero__loader-grid,
+      .hero__loader-line,
+      .hero__loader-node {
+        animation: none;
+      }
+
+      .hero__loader-line {
+        opacity: 0.62;
+        transform: rotate(var(--loader-angle, 0deg)) translateX(38px) scaleX(1);
+      }
     }
 
     .section {
@@ -456,6 +728,30 @@
 
     .intro {
       background: #fff;
+    }
+
+    .story {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      background: #fff;
+      padding-top: 48px;
+      padding-bottom: 48px;
+    }
+
+    .story::after {
+      content: "";
+      position: absolute;
+      inset: -120px 0;
+      z-index: 0;
+      background-image: url("/images/MtCamelOtherSIde.jpeg");
+      background-position: center calc(50% + var(--story-bg-y, 0px));
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0.3;
+      transform: scale(1.08);
+      will-change: background-position;
+      pointer-events: none;
     }
 
     .contact {
@@ -577,6 +873,10 @@
       object-fit: contain;
     }
 
+    .intro__grid {
+      align-items: center;
+    }
+
     .story__grid {
       grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1fr);
       align-items: center;
@@ -605,15 +905,14 @@
       box-shadow: var(--shadow);
       border: 1px solid rgba(8, 17, 30, 0.08);
       background: rgba(255, 255, 255, 0.74);
-      opacity: 0;
-      transform: translate3d(0, 34px, 0);
-      transition: opacity 760ms ease, transform 760ms cubic-bezier(0.2, 0.72, 0.2, 1);
-      will-change: opacity, transform;
+      opacity: 1;
+      transform: none;
+      align-self: center;
     }
 
     .story__image--photo.is-visible {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: none;
     }
 
     .story__photo-frame {
@@ -621,6 +920,24 @@
       width: 100%;
       height: 100%;
       min-height: 560px;
+      isolation: isolate;
+      background: rgba(245, 247, 251, 0.74);
+    }
+
+    .story__pixel-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+    }
+
+    .story__pixel-canvas.is-active {
+      opacity: 1;
+      transition: none;
     }
 
     .story__image--photo img {
@@ -630,33 +947,38 @@
       height: 100%;
       object-fit: cover;
       opacity: 0;
-      transform: translate3d(0, 28px, 0);
-      transition: opacity 820ms ease, transform 820ms cubic-bezier(0.2, 0.72, 0.2, 1);
-      will-change: opacity, transform;
+      z-index: 0;
+      filter: saturate(0.96) contrast(0.98);
+      transform: scale(1.03);
+      transition: opacity 520ms ease, transform 1120ms cubic-bezier(0.2, 0.72, 0.2, 1), filter 520ms ease;
+      will-change: opacity, transform, filter;
     }
 
     .story__image--photo img.is-active {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
-    }
-
-    .story__effect {
-      position: absolute;
-      inset: 0;
       z-index: 2;
-      pointer-events: none;
+      filter: saturate(1.04) contrast(1.01);
+      transform: translate3d(0, 0, 0) scale(1);
+      animation: story-photo-settle 1120ms cubic-bezier(0.2, 0.72, 0.2, 1) both;
+    }
+
+    .story__image--photo img.is-leaving {
       opacity: 0;
-      transition: opacity 260ms ease;
+      z-index: 1;
+      filter: saturate(0.82) contrast(0.94);
+      transform: scale(1.04);
     }
 
-    .story__effect canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+    @keyframes story-photo-settle {
+      0% {
+        filter: saturate(0.96) contrast(0.98);
+        transform: scale(1.028);
+      }
 
-    .story__effect.is-active {
-      opacity: 1;
+      100% {
+        filter: saturate(1.04) contrast(1.01);
+        transform: scale(1);
+      }
     }
 
     .story__quote,
@@ -680,6 +1002,10 @@
 
     .contact__note {
       border-radius: 0 0 30px 0;
+    }
+
+    .team__note {
+      border-radius: 0 0 28px 0;
     }
 
     .team-profiles {
@@ -1271,7 +1597,7 @@
   </style>
 </head>
 <body>
-  <div class="page-shell">
+  <div class="page-shell is-hero-intro">
     <header class="site-header">
       <div class="container site-header__inner">
         <a class="brand" href="index.html#home" aria-label="Koru Services home">
@@ -1295,7 +1621,20 @@
           </video>
         </div>
 
-        <div class="hero__physics" aria-hidden="true"></div>
+        <div class="hero__loader" role="status" aria-live="polite" aria-label="Loading home page">
+          <div class="hero__loader-core">
+            <span class="hero__loader-grid" aria-hidden="true"></span>
+            <span class="hero__loader-line hero__loader-line--one" aria-hidden="true"></span>
+            <span class="hero__loader-line hero__loader-line--two" aria-hidden="true"></span>
+            <span class="hero__loader-line hero__loader-line--three" aria-hidden="true"></span>
+            <span class="hero__loader-line hero__loader-line--four" aria-hidden="true"></span>
+            <span class="hero__loader-node hero__loader-node--one" aria-hidden="true"></span>
+            <span class="hero__loader-node hero__loader-node--two" aria-hidden="true"></span>
+            <span class="hero__loader-node hero__loader-node--three" aria-hidden="true"></span>
+            <span class="hero__loader-node hero__loader-node--four" aria-hidden="true"></span>
+            <span class="hero__loader-readout" data-hero-loader>0%</span>
+          </div>
+        </div>
 
         <div class="container hero__content">
           <div class="hero__content-inner">
@@ -1368,7 +1707,6 @@
             <div class="story__photo-frame">
               <img class="is-active" src="https://static.wixstatic.com/media/f118c5_96af5fda3cd643a98bcad32dfd76efd8~mv2.jpg" alt="Koru Services team and community image" data-story-slide>
               <img src="https://static.wixstatic.com/media/f118c5_8ee015db1bda435b8f4e0a14d14e99c2~mv2.jpg/v1/fill/w_488,h_477,al_t,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f118c5_8ee015db1bda435b8f4e0a14d14e99c2~mv2.jpg" alt="Koru Services team photo" data-story-slide>
-              <div class="story__effect" aria-hidden="true"></div>
             </div>
           </div>
         </div>
@@ -1669,6 +2007,77 @@
 
   <script>
     (function () {
+      const shell = document.querySelector('.page-shell');
+      const loader = document.querySelector('[data-hero-loader]');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!shell || !shell.classList.contains('is-hero-intro')) {
+        return;
+      }
+
+      const introDuration = 5000;
+      let startTime = window.performance.now();
+      let frameId = 0;
+      let isComplete = false;
+
+      function setProgress(value) {
+        if (loader) {
+          loader.textContent = `${Math.max(0, Math.min(100, Math.round(value)))}%`;
+        }
+      }
+
+      function cleanup() {
+        window.removeEventListener('wheel', completeIntro);
+        window.removeEventListener('touchmove', completeIntro);
+        window.removeEventListener('scroll', completeIntro);
+        window.removeEventListener('keydown', onKeydown);
+      }
+
+      function completeIntro() {
+        if (isComplete) {
+          return;
+        }
+
+        isComplete = true;
+        window.cancelAnimationFrame(frameId);
+        setProgress(100);
+        shell.classList.remove('is-hero-intro');
+        cleanup();
+      }
+
+      function onKeydown(event) {
+        if (['ArrowDown', 'PageDown', ' ', 'Spacebar', 'End'].includes(event.key)) {
+          completeIntro();
+        }
+      }
+
+      if (prefersReducedMotion || window.location.hash) {
+        completeIntro();
+        return;
+      }
+
+      function updateProgress(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(100, (elapsed / introDuration) * 100);
+
+        setProgress(progress);
+
+        if (progress >= 100) {
+          completeIntro();
+          return;
+        }
+
+        frameId = window.requestAnimationFrame(updateProgress);
+      }
+
+      window.addEventListener('wheel', completeIntro, { passive: true });
+      window.addEventListener('touchmove', completeIntro, { passive: true });
+      window.addEventListener('scroll', completeIntro, { passive: true });
+      window.addEventListener('keydown', onKeydown);
+      frameId = window.requestAnimationFrame(updateProgress);
+    })();
+
+    (function () {
       const heading = document.querySelector('[data-hero-heading]');
       const word = document.querySelector('[data-hero-word]');
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1703,14 +2112,148 @@
     (function () {
       const storyPhoto = document.querySelector('[data-story-photo]');
       const storySlides = Array.from(document.querySelectorAll('[data-story-slide]'));
+      const storyFrame = storyPhoto ? storyPhoto.querySelector('.story__photo-frame') : null;
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       if (!storyPhoto) {
         return;
       }
 
-      let activeSlide = 0;
+      let activeSlide = Math.max(0, storySlides.findIndex((slide) => slide.classList.contains('is-active')));
       let cycleStarted = false;
+      let transitionTimer = 0;
+      let pixelAnimation = 0;
+      const pixelCanvas = storyFrame ? document.createElement('canvas') : null;
+      const pixelContext = pixelCanvas ? pixelCanvas.getContext('2d') : null;
+
+      if (storyFrame && pixelCanvas && pixelContext) {
+        pixelCanvas.className = 'story__pixel-canvas';
+        storyFrame.appendChild(pixelCanvas);
+      }
+
+      function easeInOut(value) {
+        return value < 0.5
+          ? 4 * value * value * value
+          : 1 - Math.pow(-2 * value + 2, 3) / 2;
+      }
+
+      function drawImageCover(context, image, width, height) {
+        const imageWidth = image.naturalWidth || image.width;
+        const imageHeight = image.naturalHeight || image.height;
+
+        if (!imageWidth || !imageHeight) {
+          return;
+        }
+
+        const scale = Math.max(width / imageWidth, height / imageHeight);
+        const sourceWidth = width / scale;
+        const sourceHeight = height / scale;
+        const sourceX = (imageWidth - sourceWidth) / 2;
+        const sourceY = (imageHeight - sourceHeight) / 2;
+
+        context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, width, height);
+      }
+
+      function runPixelTransition(previousSlide, upcomingSlide) {
+        if (
+          !storyFrame ||
+          !pixelCanvas ||
+          !pixelContext ||
+          !previousSlide.complete ||
+          !upcomingSlide.complete ||
+          !previousSlide.naturalWidth ||
+          !upcomingSlide.naturalWidth
+        ) {
+          return false;
+        }
+
+        const rect = storyFrame.getBoundingClientRect();
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(1, Math.round(rect.width * pixelRatio));
+        const height = Math.max(1, Math.round(rect.height * pixelRatio));
+        const lowCanvas = document.createElement('canvas');
+        const lowContext = lowCanvas.getContext('2d');
+        const duration = 1120;
+        const maxPixelSize = Math.max(18, Math.round(Math.min(width, height) / 18));
+
+        if (!lowContext) {
+          return false;
+        }
+
+        window.cancelAnimationFrame(pixelAnimation);
+        pixelCanvas.width = width;
+        pixelCanvas.height = height;
+        pixelContext.imageSmoothingEnabled = false;
+        pixelCanvas.classList.add('is-active');
+
+        function render(now, startTime) {
+          const progress = Math.min(1, (now - startTime) / duration);
+          const eased = easeInOut(progress);
+          const pixelSize = Math.max(1, Math.round(maxPixelSize - (maxPixelSize - 1) * eased));
+          const lowWidth = Math.max(1, Math.ceil(width / pixelSize));
+          const lowHeight = Math.max(1, Math.ceil(height / pixelSize));
+
+          lowCanvas.width = lowWidth;
+          lowCanvas.height = lowHeight;
+          lowContext.imageSmoothingEnabled = true;
+          lowContext.clearRect(0, 0, lowWidth, lowHeight);
+          lowContext.globalAlpha = Math.max(0, 1 - progress * 1.12);
+          drawImageCover(lowContext, previousSlide, lowWidth, lowHeight);
+          lowContext.globalAlpha = Math.min(1, progress * 1.18);
+          drawImageCover(lowContext, upcomingSlide, lowWidth, lowHeight);
+          lowContext.globalAlpha = 1;
+
+          pixelContext.clearRect(0, 0, width, height);
+          pixelContext.imageSmoothingEnabled = false;
+          pixelContext.drawImage(lowCanvas, 0, 0, width, height);
+
+          if (progress < 1) {
+            pixelAnimation = window.requestAnimationFrame((nextNow) => render(nextNow, startTime));
+            return;
+          }
+
+          pixelCanvas.classList.remove('is-active');
+          pixelContext.clearRect(0, 0, width, height);
+        }
+
+        pixelAnimation = window.requestAnimationFrame((now) => render(now, now));
+        return true;
+      }
+
+      function switchStorySlide(nextSlide) {
+        if (nextSlide === activeSlide || !storySlides[nextSlide]) {
+          return;
+        }
+
+        const previousSlide = storySlides[activeSlide];
+        const upcomingSlide = storySlides[nextSlide];
+
+        window.clearTimeout(transitionTimer);
+        storySlides.forEach((slide) => {
+          slide.classList.remove('is-leaving');
+        });
+
+        const isPixelTransitioning = runPixelTransition(previousSlide, upcomingSlide);
+
+        if (storyFrame && !isPixelTransitioning) {
+          storyFrame.classList.remove('is-switching');
+          void storyFrame.offsetWidth;
+          storyFrame.classList.add('is-switching');
+        }
+
+        previousSlide.classList.add('is-leaving');
+        previousSlide.classList.remove('is-active');
+        upcomingSlide.classList.add('is-active');
+        activeSlide = nextSlide;
+
+        transitionTimer = window.setTimeout(() => {
+          previousSlide.classList.remove('is-leaving');
+
+          if (storyFrame) {
+            storyFrame.classList.remove('is-switching');
+          }
+        }, 1120);
+      }
 
       function startStoryPhotoCycle() {
         if (cycleStarted || prefersReducedMotion || storySlides.length < 2) {
@@ -1720,9 +2263,7 @@
         cycleStarted = true;
 
         window.setInterval(() => {
-          storySlides[activeSlide].classList.remove('is-active');
-          activeSlide = (activeSlide + 1) % storySlides.length;
-          storySlides[activeSlide].classList.add('is-active');
+          switchStorySlide((activeSlide + 1) % storySlides.length);
         }, 10000);
       }
 
@@ -1751,10 +2292,11 @@
     (function () {
       const hero = document.querySelector('.hero');
       const introImage = document.querySelector('.intro__image');
+      const story = document.querySelector('.story');
       const contactVideo = document.querySelector('.contact__video');
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      if ((!hero && !introImage && !contactVideo) || prefersReducedMotion) {
+      if ((!hero && !introImage && !story && !contactVideo) || prefersReducedMotion) {
         return;
       }
 
@@ -1764,16 +2306,11 @@
         if (hero) {
           const rect = hero.getBoundingClientRect();
           const scrollPastHeroTop = Math.max(0, -rect.top);
-          const heroExitProgress = Math.max(0, Math.min(1, scrollPastHeroTop / rect.height));
           const videoOffset = Math.min(rect.height * 0.5, scrollPastHeroTop * 0.52);
-          const contentOffset = Math.max(rect.height * -0.18, scrollPastHeroTop * -0.16);
           const pulseOffset = Math.min(rect.height * 0.34, scrollPastHeroTop * 0.34);
-          const contentOpacity = Math.max(0.68, 1 - heroExitProgress * 0.32);
 
           hero.style.setProperty('--hero-video-y', `${videoOffset.toFixed(2)}px`);
-          hero.style.setProperty('--hero-content-y', `${contentOffset.toFixed(2)}px`);
           hero.style.setProperty('--hero-pulse-y', `${pulseOffset.toFixed(2)}px`);
-          hero.style.setProperty('--hero-content-opacity', contentOpacity.toFixed(3));
         }
 
         if (introImage) {
@@ -1786,6 +2323,18 @@
           const introOffset = normalizedDistance * introRect.height * -0.12;
 
           introImage.style.setProperty('--intro-image-y', `${introOffset.toFixed(2)}px`);
+        }
+
+        if (story) {
+          const storyRect = story.getBoundingClientRect();
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const storyCenter = storyRect.top + storyRect.height / 2;
+          const viewportCenter = viewportHeight / 2;
+          const maxDistance = (viewportHeight + storyRect.height) / 2;
+          const normalizedDistance = Math.max(-1, Math.min(1, (storyCenter - viewportCenter) / maxDistance));
+          const storyOffset = normalizedDistance * storyRect.height * -0.8;
+
+          story.style.setProperty('--story-bg-y', `${storyOffset.toFixed(2)}px`);
         }
 
         if (contactVideo) {
@@ -1841,7 +2390,7 @@
       profiles.forEach((profile) => {
         profile.addEventListener('click', (event) => {
           event.preventDefault();
-          setSelectedProfile(profile);
+          setSelectedProfile(profile.classList.contains('is-selected') ? null : profile);
         });
       });
 
@@ -1852,533 +2401,6 @@
       });
     })();
   </script>
-  <script type="module">
-    (function () {
-      const hero = document.querySelector('.hero');
-      const mount = document.querySelector('.hero__physics');
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const heroVideoUrl = 'https://video.wixstatic.com/video/f118c5_573a9e29f0e94f7eb9ac238e0a0d015e/1080p/mp4/file.mp4?fileUsed=false';
 
-      if (!hero || !mount || prefersReducedMotion) {
-        return;
-      }
-
-      let THREE;
-      let renderer;
-      let scene;
-      let camera;
-      let material;
-      let texture;
-      let video;
-      let resizeObserver;
-      let frameId = 0;
-      let hovered = false;
-      let isReady = false;
-      let isLoading = false;
-      let previousPointer = null;
-      const pointer = { x: 0.5, y: 0.5 };
-      const velocity = { x: 0, y: 0 };
-
-      async function init() {
-        if (isReady) {
-          return true;
-        }
-
-        if (isLoading) {
-          return false;
-        }
-
-        isLoading = true;
-
-        try {
-          THREE = await import('three');
-          renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            antialias: true,
-            preserveDrawingBuffer: true,
-            powerPreference: 'high-performance',
-          });
-        } catch (error) {
-          isLoading = false;
-          mount.hidden = true;
-          return false;
-        }
-
-        scene = new THREE.Scene();
-        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        camera.position.z = 1;
-
-        video = document.createElement('video');
-        video.src = heroVideoUrl;
-        video.crossOrigin = 'anonymous';
-        video.muted = true;
-        video.loop = true;
-        video.playsInline = true;
-        video.autoplay = true;
-        video.preload = 'auto';
-
-        texture = new THREE.VideoTexture(video);
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-
-        material = new THREE.ShaderMaterial({
-          transparent: true,
-          depthTest: false,
-          depthWrite: false,
-          uniforms: {
-            uTexture: { value: texture },
-            u_time: { value: 0 },
-            u_intensity: { value: 0 },
-            uMouse: { value: new THREE.Vector2(pointer.x, pointer.y) },
-            uVelocity: { value: new THREE.Vector2(0, 0) },
-            uResolution: { value: new THREE.Vector2(1, 1) },
-            uImageResolution: { value: new THREE.Vector2(16, 9) },
-          },
-          vertexShader: `
-            varying vec2 vUv;
-
-            void main() {
-              vUv = uv;
-              gl_Position = vec4(position.xy, 0.0, 1.0);
-            }
-          `,
-          fragmentShader: `
-            precision highp float;
-
-            uniform sampler2D uTexture;
-            uniform float u_time;
-            uniform float u_intensity;
-            uniform vec2 uMouse;
-            uniform vec2 uVelocity;
-            uniform vec2 uResolution;
-            uniform vec2 uImageResolution;
-            varying vec2 vUv;
-
-            vec2 coverUv(vec2 uv, vec2 screen, vec2 image) {
-              float screenRatio = screen.x / screen.y;
-              float imageRatio = image.x / image.y;
-              vec2 scale = vec2(1.0);
-
-              if (screenRatio > imageRatio) {
-                scale.y = imageRatio / screenRatio;
-              } else {
-                scale.x = screenRatio / imageRatio;
-              }
-
-              return (uv - 0.5) * scale + 0.5;
-            }
-
-            float rand(vec2 co) {
-              return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
-            }
-
-            void main() {
-              vec2 uv = coverUv(vUv, uResolution, uImageResolution);
-              vec2 mouse = vec2(uMouse.x, 1.0 - uMouse.y);
-              float aspect = uResolution.x / uResolution.y;
-              vec2 delta = (vUv - mouse) * vec2(aspect, 1.0);
-              float dist = length(delta);
-              float influence = smoothstep(0.30, 0.0, dist) * u_intensity;
-              float spread = influence * 0.010 * (1.0 + 0.28 * sin(u_time * 2.1));
-              vec2 dir = normalize(delta + 0.0001);
-              float r = texture2D(uTexture, clamp(uv + dir * spread, 0.0, 1.0)).r;
-              float g = texture2D(uTexture, clamp(uv, 0.0, 1.0)).g;
-              float b = texture2D(uTexture, clamp(uv - dir * spread, 0.0, 1.0)).b;
-              vec3 color = vec3(r, g, b);
-
-              color *= mix(1.0, 1.18, influence);
-
-              float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
-              color = mix(color, mix(vec3(luma), color, 1.32), influence);
-
-              float grain = rand(vUv + fract(u_time * 0.07)) * 0.06 - 0.03;
-              color += grain * influence;
-
-              gl_FragColor = vec4(clamp(color, 0.0, 1.0), influence);
-            }
-          `,
-        });
-
-        renderer.setClearColor(0x000000, 0);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-        mount.appendChild(renderer.domElement);
-        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
-
-        video.addEventListener('loadedmetadata', () => {
-          material.uniforms.uImageResolution.value.set(video.videoWidth || 16, video.videoHeight || 9);
-        });
-        video.play().catch(() => {});
-
-        resizeObserver = new ResizeObserver(resize);
-        resizeObserver.observe(mount);
-        resize();
-        isReady = true;
-        isLoading = false;
-        return true;
-      }
-
-      function resize() {
-        if (!renderer || !material) {
-          return;
-        }
-
-        const rect = mount.getBoundingClientRect();
-        const width = Math.max(1, rect.width);
-        const height = Math.max(1, rect.height);
-
-        renderer.setSize(width, height, false);
-        material.uniforms.uResolution.value.set(width, height);
-      }
-
-      function updatePointer(event) {
-        const rect = hero.getBoundingClientRect();
-        const nextX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-        const nextY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-
-        if (previousPointer) {
-          velocity.x = nextX - previousPointer.x;
-          velocity.y = nextY - previousPointer.y;
-        }
-
-        pointer.x = nextX;
-        pointer.y = nextY;
-        previousPointer = { x: nextX, y: nextY };
-      }
-
-      function animate(time = 0) {
-        if (!material || !renderer || !scene || !camera) {
-          frameId = 0;
-          return;
-        }
-
-        const target = hovered ? 1 : 0;
-        material.uniforms.u_intensity.value += (target - material.uniforms.u_intensity.value) * 0.045;
-        material.uniforms.u_time.value = time * 0.001;
-        material.uniforms.uMouse.value.set(pointer.x, pointer.y);
-        material.uniforms.uVelocity.value.set(velocity.x, velocity.y);
-        velocity.x *= 0.92;
-        velocity.y *= 0.92;
-        renderer.render(scene, camera);
-
-        if (hovered || material.uniforms.u_intensity.value > 0.01) {
-          frameId = window.requestAnimationFrame(animate);
-        } else {
-          frameId = 0;
-        }
-      }
-
-      function startLoop() {
-        if (!frameId) {
-          frameId = window.requestAnimationFrame(animate);
-        }
-      }
-
-      hero.addEventListener('pointerenter', async (event) => {
-        updatePointer(event);
-
-        if (!(await init())) {
-          return;
-        }
-
-        hovered = true;
-        mount.classList.add('is-active');
-        startLoop();
-      }, { passive: true });
-
-      hero.addEventListener('pointermove', (event) => {
-        updatePointer(event);
-      }, { passive: true });
-
-      hero.addEventListener('pointerleave', () => {
-        hovered = false;
-        previousPointer = null;
-        mount.classList.remove('is-active');
-        startLoop();
-      });
-
-      window.addEventListener('resize', resize);
-    })();
-
-    (function () {
-      const storyPhoto = document.querySelector('[data-story-photo]');
-      const mount = document.querySelector('.story__effect');
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (!storyPhoto || !mount || prefersReducedMotion) {
-        return;
-      }
-
-      let THREE;
-      let renderer;
-      let scene;
-      let camera;
-      let material;
-      let texture;
-      let loader;
-      let resizeObserver;
-      let mutationObserver;
-      let frameId = 0;
-      let hovered = false;
-      let isReady = false;
-      let isLoading = false;
-      let loadedSrc = "";
-      let previousPointer = null;
-      const pointer = { x: 0.5, y: 0.5 };
-      const velocity = { x: 0, y: 0 };
-
-      const fragmentShader = `
-        precision highp float;
-
-        uniform sampler2D uTexture;
-        uniform float u_time;
-        uniform float u_intensity;
-        uniform vec2 uMouse;
-        uniform vec2 uVelocity;
-        uniform vec2 uResolution;
-        uniform vec2 uImageResolution;
-        varying vec2 vUv;
-
-        vec2 coverUv(vec2 uv, vec2 screen, vec2 image) {
-          float screenRatio = screen.x / screen.y;
-          float imageRatio = image.x / image.y;
-          vec2 scale = vec2(1.0);
-
-          if (screenRatio > imageRatio) {
-            scale.y = imageRatio / screenRatio;
-          } else {
-            scale.x = screenRatio / imageRatio;
-          }
-
-          return (uv - 0.5) * scale + 0.5;
-        }
-
-        float rand(vec2 co) {
-          return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
-        }
-
-        void main() {
-          vec2 uv = coverUv(vUv, uResolution, uImageResolution);
-          vec2 mouse = vec2(uMouse.x, 1.0 - uMouse.y);
-          float aspect = uResolution.x / uResolution.y;
-          vec2 delta = (vUv - mouse) * vec2(aspect, 1.0);
-          float dist = length(delta);
-          float influence = smoothstep(0.30, 0.0, dist) * u_intensity;
-          float spread = influence * 0.010 * (1.0 + 0.28 * sin(u_time * 2.1));
-          vec2 dir = normalize(delta + 0.0001);
-          float r = texture2D(uTexture, clamp(uv + dir * spread, 0.0, 1.0)).r;
-          float g = texture2D(uTexture, clamp(uv, 0.0, 1.0)).g;
-          float b = texture2D(uTexture, clamp(uv - dir * spread, 0.0, 1.0)).b;
-          vec3 color = vec3(r, g, b);
-
-          color *= mix(1.0, 1.18, influence);
-
-          float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
-          color = mix(color, mix(vec3(luma), color, 1.32), influence);
-
-          float grain = rand(vUv + fract(u_time * 0.07)) * 0.06 - 0.03;
-          color += grain * influence;
-
-          gl_FragColor = vec4(clamp(color, 0.0, 1.0), influence);
-        }
-      `;
-
-      function activeStoryImage() {
-        return storyPhoto.querySelector('[data-story-slide].is-active') || storyPhoto.querySelector('[data-story-slide]');
-      }
-
-      async function setTextureFromActiveImage() {
-        const image = activeStoryImage();
-
-        if (!image || !loader || !material) {
-          return;
-        }
-
-        const src = image.currentSrc || image.src;
-
-        if (!src || src === loadedSrc) {
-          return;
-        }
-
-        try {
-          const nextTexture = await loader.loadAsync(src);
-          nextTexture.colorSpace = THREE.SRGBColorSpace;
-          nextTexture.minFilter = THREE.LinearFilter;
-          nextTexture.magFilter = THREE.LinearFilter;
-
-          if (texture) {
-            texture.dispose();
-          }
-
-          texture = nextTexture;
-          loadedSrc = src;
-          material.uniforms.uTexture.value = texture;
-          material.uniforms.uImageResolution.value.set(image.naturalWidth || 16, image.naturalHeight || 9);
-        } catch (error) {
-          mount.hidden = true;
-        }
-      }
-
-      async function init() {
-        if (isReady) {
-          await setTextureFromActiveImage();
-          return true;
-        }
-
-        if (isLoading) {
-          return false;
-        }
-
-        isLoading = true;
-
-        try {
-          THREE = await import('three');
-          renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            antialias: true,
-            preserveDrawingBuffer: true,
-            powerPreference: 'high-performance',
-          });
-        } catch (error) {
-          isLoading = false;
-          mount.hidden = true;
-          return false;
-        }
-
-        loader = new THREE.TextureLoader();
-        loader.setCrossOrigin('anonymous');
-
-        scene = new THREE.Scene();
-        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        camera.position.z = 1;
-
-        material = new THREE.ShaderMaterial({
-          transparent: true,
-          depthTest: false,
-          depthWrite: false,
-          uniforms: {
-            uTexture: { value: null },
-            u_time: { value: 0 },
-            u_intensity: { value: 0 },
-            uMouse: { value: new THREE.Vector2(pointer.x, pointer.y) },
-            uVelocity: { value: new THREE.Vector2(0, 0) },
-            uResolution: { value: new THREE.Vector2(1, 1) },
-            uImageResolution: { value: new THREE.Vector2(16, 9) },
-          },
-          vertexShader: `
-            varying vec2 vUv;
-
-            void main() {
-              vUv = uv;
-              gl_Position = vec4(position.xy, 0.0, 1.0);
-            }
-          `,
-          fragmentShader,
-        });
-
-        renderer.setClearColor(0x000000, 0);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-        mount.appendChild(renderer.domElement);
-        scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
-
-        resizeObserver = new ResizeObserver(resize);
-        resizeObserver.observe(mount);
-        resize();
-
-        mutationObserver = new MutationObserver(() => {
-          setTextureFromActiveImage();
-        });
-        storyPhoto.querySelectorAll('[data-story-slide]').forEach((slide) => {
-          mutationObserver.observe(slide, { attributes: true, attributeFilter: ['class'] });
-        });
-
-        await setTextureFromActiveImage();
-        isReady = true;
-        isLoading = false;
-        return true;
-      }
-
-      function resize() {
-        if (!renderer || !material) {
-          return;
-        }
-
-        const rect = mount.getBoundingClientRect();
-        const width = Math.max(1, rect.width);
-        const height = Math.max(1, rect.height);
-
-        renderer.setSize(width, height, false);
-        material.uniforms.uResolution.value.set(width, height);
-      }
-
-      function updatePointer(event) {
-        const rect = storyPhoto.getBoundingClientRect();
-        const nextX = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-        const nextY = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-
-        if (previousPointer) {
-          velocity.x = nextX - previousPointer.x;
-          velocity.y = nextY - previousPointer.y;
-        }
-
-        pointer.x = nextX;
-        pointer.y = nextY;
-        previousPointer = { x: nextX, y: nextY };
-      }
-
-      function animate(time = 0) {
-        if (!material || !renderer || !scene || !camera || !texture) {
-          frameId = 0;
-          return;
-        }
-
-        const target = hovered ? 1 : 0;
-        material.uniforms.u_intensity.value += (target - material.uniforms.u_intensity.value) * 0.045;
-        material.uniforms.u_time.value = time * 0.001;
-        material.uniforms.uMouse.value.set(pointer.x, pointer.y);
-        material.uniforms.uVelocity.value.set(velocity.x, velocity.y);
-        velocity.x *= 0.92;
-        velocity.y *= 0.92;
-        renderer.render(scene, camera);
-
-        if (hovered || material.uniforms.u_intensity.value > 0.01) {
-          frameId = window.requestAnimationFrame(animate);
-        } else {
-          frameId = 0;
-        }
-      }
-
-      function startLoop() {
-        if (!frameId) {
-          frameId = window.requestAnimationFrame(animate);
-        }
-      }
-
-      storyPhoto.addEventListener('pointerenter', async (event) => {
-        updatePointer(event);
-
-        if (!(await init())) {
-          return;
-        }
-
-        hovered = true;
-        mount.classList.add('is-active');
-        startLoop();
-      }, { passive: true });
-
-      storyPhoto.addEventListener('pointermove', (event) => {
-        updatePointer(event);
-      }, { passive: true });
-
-      storyPhoto.addEventListener('pointerleave', () => {
-        hovered = false;
-        previousPointer = null;
-        mount.classList.remove('is-active');
-        startLoop();
-      });
-
-      window.addEventListener('resize', resize);
-    })();
-  </script>
 </body>
 </html>
